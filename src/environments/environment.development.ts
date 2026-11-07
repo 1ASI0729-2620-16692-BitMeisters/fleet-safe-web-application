@@ -4,7 +4,7 @@ export const environment = {
   landingPageUrl: 'https://1asi0729-2620-16692-bitmeisters.github.io/Landing-Page',
   platformProviderApiBaseUrl: 'http://localhost:3000/api/v1',
   backendApiBaseUrl: 'http://localhost:8080/api/v1',
-  backendSignInEndpointPath: '/auth/login',
+  backendSignInEndpointPath: '/tokens',
   backendUsersEndpointPath: '/users',
   platformProviderInspectionsEndpointPath: '/inspections',
   platformProviderInspectionItemsEndpointPath: '/inspection-items',
