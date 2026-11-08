@@ -1,5 +1,5 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { forkJoin, retry } from 'rxjs';
+import { forkJoin, retry, concatMap, of } from 'rxjs';
 import { DocumentType } from '../domain/model/document-type.entity';
 import { DocumentedVehicle } from '../domain/model/documented-vehicle.entity';
 import { DocumentStatus } from '../domain/model/document-status.enum';
@@ -70,7 +70,7 @@ export class VehicleDocumentationStore {
 
   selectVehicle = (vehicleId: string): void => this.vehicleIdSignal.set(vehicleId);
 
-  save = (input: VehicleDocumentInput, id: string | null, done: () => void): void => {
+  save = (input: VehicleDocumentInput, id: string | null, file: File | null, done: () => void): void => {
     if (this.savingSignal() || !validateDocument(input)) return;
 
     const now = new Date().toISOString();
@@ -81,9 +81,15 @@ export class VehicleDocumentationStore {
       createdAt: existing?.createdAt ?? now,
       updatedAt: now,
     });
-    const request = existing
-      ? this.vehicleDocumentationApi.updateVehicleDocument(document)
-      : this.vehicleDocumentationApi.registerVehicleDocument(document);
+    const request = (
+      existing
+        ? this.vehicleDocumentationApi.updateVehicleDocument(document)
+        : this.vehicleDocumentationApi.registerVehicleDocument(document)
+    ).pipe(
+      concatMap((saved) =>
+        file ? this.vehicleDocumentationApi.attachVehicleDocumentFile(saved, file) : of(saved),
+      ),
+    );
 
     this.savingSignal.set(true);
     this.errorSignal.set(null);

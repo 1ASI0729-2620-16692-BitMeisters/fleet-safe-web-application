@@ -7,7 +7,7 @@ export interface VehicleDocumentResource extends BaseResource {
   number: string;
   issueDate: string;
   expirationDate: string;
-  fileUrl: string;
+  fileUrl: string | null;
   createdAt: string;
   updatedAt: string;
 }
