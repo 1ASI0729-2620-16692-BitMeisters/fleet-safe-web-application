@@ -6,7 +6,7 @@ export class ScheduleRepairCommand {
   #workshop: string;
   #cost: number;
   #startedAt: string;
-  #finishedAt: string;
+  #finishedAt: string | null;
 
   /**
    * Creates a new command instance.
@@ -17,7 +17,7 @@ export class ScheduleRepairCommand {
     workshop: string;
     cost: number;
     startedAt: string;
-    finishedAt: string;
+    finishedAt: string | null;
   }) {
     this.#incidentId = props.incidentId;
     this.#workshop = props.workshop;
@@ -54,10 +54,10 @@ export class ScheduleRepairCommand {
     this.#startedAt = value;
   }
 
-  get finishedAt(): string {
+  get finishedAt(): string | null {
     return this.#finishedAt;
   }
-  set finishedAt(value: string) {
+  set finishedAt(value: string | null) {
     this.#finishedAt = value;
   }
 }

@@ -9,14 +9,6 @@
     }
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'incident.follow-up.created-by' | translate }}</mat-label>
-    <input matInput formControlName="createdBy" required />
-    @if (form.get('createdBy')?.touched && form.get('createdBy')!.hasError('required')) {
-      <mat-error>{{ 'incident.error.created-by-required' | translate }}</mat-error>
-    }
-  </mat-form-field>
-
   <div class="form-actions">
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
       {{ 'incident.follow-up.add' | translate }}

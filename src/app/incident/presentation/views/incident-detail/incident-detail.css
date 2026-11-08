@@ -63,3 +63,10 @@ mat-card-header {
   justify-content: space-between;
   align-items: center;
 }
+
+.resolve {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}

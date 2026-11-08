@@ -6,5 +6,5 @@ export interface ScheduleRepairRequest {
   workshop: string;
   cost: number;
   startedAt: string;
-  finishedAt: string;
+  finishedAt: string | null;
 }

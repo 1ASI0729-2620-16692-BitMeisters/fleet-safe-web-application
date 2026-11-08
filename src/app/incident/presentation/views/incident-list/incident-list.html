@@ -41,8 +41,8 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         {{ 'incidents.vehicle' | translate }}
       </th>
-      <td mat-cell *matCellDef="let incident" class="mono">
-        {{ incident.vehicleId }}
+      <td mat-cell *matCellDef="let incident">
+        {{ store.plateOf(incident.vehicleId) }}
       </td>
     </ng-container>
 
