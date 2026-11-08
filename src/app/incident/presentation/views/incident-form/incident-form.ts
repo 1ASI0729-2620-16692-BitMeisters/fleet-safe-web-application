@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
+import { IamStore } from '../../../../iam/application/iam.store';
 import { Incident } from '../../../domain/model/incident.entity';
 import { IncidentOrigin } from '../../../domain/model/incident-origin.enum';
 import { IncidentSeverity } from '../../../domain/model/incident-severity.enum';
@@ -26,6 +28,7 @@ import { IncidentStatus } from '../../../domain/model/incident-status.enum';
     MatButtonModule,
     MatIconModule,
     TranslatePipe,
+    DatePipe,
   ],
   templateUrl: './incident-form.html',
   styleUrl: './incident-form.css',
@@ -35,6 +38,8 @@ export class IncidentForm {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private store = inject(IncidentStore);
+  private iamStore = inject(IamStore);
+  private reportedBy: string | null = null;
 
   /**
    * Form group for the incident form.
@@ -60,11 +65,11 @@ export class IncidentForm {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    reportedBy: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
   });
+
+  vehicles = this.store.vehicles;
+
+  inspectionsOfVehicle = this.store.inspectionsOfVehicle;
 
   /**
    * Signal for the list of incident types.
@@ -92,6 +97,10 @@ export class IncidentForm {
   incidentId: string | null = null;
 
   constructor() {
+    this.form.controls.vehicleId.valueChanges.subscribe((vehicleId) => {
+      this.form.controls.inspectionId.setValue(null);
+      this.store.loadInspectionsOfVehicle(vehicleId);
+    });
     this.route.params.subscribe((params) => {
       this.incidentId = params['id'] ? params['id'] : null;
       this.isEdit = !!this.incidentId;
@@ -107,8 +116,8 @@ export class IncidentForm {
             origin: incident.origin,
             description: incident.description,
             severity: incident.severity,
-            reportedBy: incident.reportedBy,
           });
+          this.reportedBy = incident.reportedBy;
         }
       }
     });
@@ -124,12 +133,13 @@ export class IncidentForm {
       id: this.incidentId ?? crypto.randomUUID(),
       vehicleId: this.form.value.vehicleId!,
       incidentTypeId: this.form.value.incidentTypeId!,
-      inspectionId: this.form.value.inspectionId ?? null,
+      inspectionId:
+        this.form.value.origin === IncidentOrigin.INSPECTION ? (this.form.value.inspectionId ?? null) : null,
       origin: this.form.value.origin!,
       description: this.form.value.description!,
       severity: this.form.value.severity!,
       status: IncidentStatus.REGISTERED,
-      reportedBy: this.form.value.reportedBy!,
+      reportedBy: this.reportedBy ?? this.iamStore.currentUser()?.id ?? '',
       reportedAt: new Date().toISOString(),
     });
 

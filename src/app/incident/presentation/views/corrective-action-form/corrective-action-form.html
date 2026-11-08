@@ -10,14 +10,6 @@
   </mat-form-field>
 
   <mat-form-field>
-    <mat-label>{{ 'incident.corrective-action.performed-by' | translate }}</mat-label>
-    <input matInput formControlName="performedBy" required />
-    @if (form.get('performedBy')?.touched && form.get('performedBy')!.hasError('required')) {
-      <mat-error>{{ 'incident.error.performed-by-required' | translate }}</mat-error>
-    }
-  </mat-form-field>
-
-  <mat-form-field>
     <mat-label>{{ 'incident.corrective-action.performed-at' | translate }}</mat-label>
     <input matInput type="datetime-local" formControlName="performedAt" required />
   </mat-form-field>

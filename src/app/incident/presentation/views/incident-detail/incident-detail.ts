@@ -5,8 +5,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IncidentStore } from '../../../application/incident.store';
+import { CompleteRepairCommand } from '../../../domain/model/complete-repair.command';
+import { ResolveIncidentCommand } from '../../../domain/model/resolve-incident.command';
+import { IncidentStatus } from '../../../domain/model/incident-status.enum';
 
 /**
  * Displays detailed information about a single incident.
@@ -19,6 +25,9 @@ import { IncidentStore } from '../../../application/incident.store';
     MatCardModule,
     MatIconModule,
     MatDividerModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    ReactiveFormsModule,
     TranslatePipe,
   ],
   templateUrl: './incident-detail.html',
@@ -38,6 +47,38 @@ export class IncidentDetail {
    * The incident entity.
    */
   readonly incident = computed(() => this.store.getIncidentById(this.incidentId())());
+
+  readonly plateOf = this.store.plateOf;
+
+  readonly resolutionTypes = ['REPAIRED', 'REPLACED', 'NO_ACTION_REQUIRED'];
+
+  readonly resolutionType = new FormControl<string | null>(null, [Validators.required]);
+
+  readonly isOpen = computed(() => {
+    const status = this.incident()?.status;
+    return status === IncidentStatus.REGISTERED || status === IncidentStatus.IN_REVIEW;
+  });
+
+  completeRepair(repairId: string) {
+    this.store.completeRepair(
+      new CompleteRepairCommand({
+        incidentId: this.incidentId(),
+        repairId,
+        finishedAt: new Date().toISOString(),
+      }),
+    );
+  }
+
+  resolve() {
+    if (this.resolutionType.invalid) return;
+    this.store.resolveIncident(
+      new ResolveIncidentCommand({
+        incidentId: this.incidentId(),
+        resolutionType: this.resolutionType.value!,
+        resolvedAt: new Date().toISOString(),
+      }),
+    );
+  }
 
   /**
    * Navigates to the corrective action form.

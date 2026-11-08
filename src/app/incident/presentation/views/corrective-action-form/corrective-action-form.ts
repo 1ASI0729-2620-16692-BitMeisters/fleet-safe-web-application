@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IamStore } from '../../../../iam/application/iam.store';
 import { IncidentStore } from '../../../application/incident.store';
 import { RegisterCorrectiveActionCommand } from '../../../domain/model/register-corrective-action.command';
 
@@ -32,16 +33,19 @@ export class CorrectiveActionForm {
   /**
    * Form group for the corrective action form.
    */
+  private iamStore = inject(IamStore);
+
+  private localNow(): string {
+    const now = new Date();
+    return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  }
+
   form = this.fb.group({
     description: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    performedBy: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    performedAt: new FormControl<string>(new Date().toISOString(), {
+    performedAt: new FormControl<string>(this.localNow(), {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -66,8 +70,8 @@ export class CorrectiveActionForm {
     const command = new RegisterCorrectiveActionCommand({
       incidentId: this.incidentId,
       description: this.form.value.description!,
-      performedBy: this.form.value.performedBy!,
-      performedAt: this.form.value.performedAt!,
+      performedBy: this.iamStore.currentUser()?.id ?? '',
+      performedAt: new Date(this.form.value.performedAt!).toISOString(),
       evidenceUrl: this.form.value.evidenceUrl ?? '',
     });
 

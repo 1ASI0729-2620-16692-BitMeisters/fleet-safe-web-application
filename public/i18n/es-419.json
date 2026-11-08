@@ -234,9 +234,9 @@
     "summary": {
       "title": "Incidencia"
     },
-    "vehicle": "ID del Vehículo",
+    "vehicle": "Vehículo",
     "type": "Tipo de Incidencia",
-    "inspection": "ID de Inspección",
+    "inspection": "Inspección",
     "origin": {
       "label": "Origen",
       "INSPECTION": "Inspección",
@@ -312,6 +312,15 @@
       "cost-required": "El costo es obligatorio",
       "note-required": "La nota es obligatoria",
       "created-by-required": "El creador es obligatorio"
+    },
+    "no-inspections": "Este vehículo no tiene inspecciones",
+    "complete-repair": "Completar reparación",
+    "resolve": "Resolver incidencia",
+    "resolution": {
+      "label": "Resolución",
+      "REPAIRED": "Reparado",
+      "REPLACED": "Pieza reemplazada",
+      "NO_ACTION_REQUIRED": "No requiere acción"
     }
   },
   "fleet": {

@@ -234,9 +234,9 @@
     "summary": {
       "title": "Incident"
     },
-    "vehicle": "Vehicle ID",
+    "vehicle": "Vehicle",
     "type": "Incident Type",
-    "inspection": "Inspection ID",
+    "inspection": "Inspection",
     "origin": {
       "label": "Origin",
       "INSPECTION": "Inspection",
@@ -312,6 +312,15 @@
       "cost-required": "Cost is required",
       "note-required": "Note is required",
       "created-by-required": "Creator is required"
+    },
+    "no-inspections": "This vehicle has no inspections",
+    "complete-repair": "Complete repair",
+    "resolve": "Resolve incident",
+    "resolution": {
+      "label": "Resolution",
+      "REPAIRED": "Repaired",
+      "REPLACED": "Part replaced",
+      "NO_ACTION_REQUIRED": "No action required"
     }
   },
   "fleet": {
