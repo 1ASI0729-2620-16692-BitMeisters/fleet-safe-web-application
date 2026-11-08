@@ -1,0 +1,66 @@
+<section>
+  <header>
+    <h1>{{ 'evaluation.title' | translate }}</h1>
+    <p>{{ 'evaluation.subtitle' | translate }}</p>
+  </header>
+
+  <div class="summary" role="list">
+    @for (status of statuses; track status) {
+      <article class="metric" [class]="status" role="listitem">
+        <strong>{{ store.counts()[status] }}</strong>
+        <span>{{ 'evaluation.status.' + status | translate }}</span>
+      </article>
+    }
+  </div>
+
+  <mat-form-field class="filter">
+    <mat-label>{{ 'evaluation.filter' | translate }}</mat-label>
+    <mat-select [value]="store.statusFilter()" (selectionChange)="store.filterByStatus($event.value)">
+      @for (filter of filters; track filter) {
+        <mat-option [value]="filter">{{ 'evaluation.status.' + filter | translate }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (store.error()) {
+    <div class="error" role="alert">
+      {{ 'evaluation.error' | translate }}
+      <button mat-button (click)="store.load()">{{ 'evaluation.retry' | translate }}</button>
+    </div>
+  } @else if (store.loading()) {
+    <p role="status">{{ 'evaluation.loading' | translate }}</p>
+  } @else {
+    <div class="table-wrapper">
+      <table>
+        <caption>{{ 'evaluation.caption' | translate }}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{{ 'evaluation.plate' | translate }}</th>
+            <th scope="col">{{ 'evaluation.vehicle' | translate }}</th>
+            <th scope="col">{{ 'evaluation.evaluatedAt' | translate }}</th>
+            <th scope="col">{{ 'evaluation.state' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (condition of store.filteredConditions(); track condition.vehicleId) {
+            <tr>
+              <td><strong>{{ condition.plate }}</strong></td>
+              <td>{{ condition.description }}</td>
+              <td>{{ condition.evaluatedAt ? (condition.evaluatedAt | date: 'dd/MM/yyyy HH:mm') : '—' }}</td>
+              <td>
+                <span class="badge" [class]="condition.status">{{ 'evaluation.status.' + condition.status | translate }}</span>
+                @if (condition.isOverride) {
+                  <span class="override">{{ 'evaluation.override' | translate }}</span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="empty">{{ 'evaluation.empty' | translate }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

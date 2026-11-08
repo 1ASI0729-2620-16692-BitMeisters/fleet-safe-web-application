@@ -1,0 +1,6 @@
+export enum OperationalStatus {
+  ENABLED = 'ENABLED',
+  OBSERVED = 'OBSERVED',
+  NOT_ENABLED = 'NOT_ENABLED',
+  NOT_INSPECTED = 'NOT_INSPECTED',
+}

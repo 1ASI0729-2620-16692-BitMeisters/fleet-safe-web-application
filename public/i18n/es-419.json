@@ -501,7 +501,8 @@
     "pageNotFound": "Página no encontrada",
     "signIn": "Iniciar sesión",
     "users": "Usuarios",
-    "newUser": "Nuevo usuario"
+    "newUser": "Nuevo usuario",
+    "vehicleStatusBoard": "Estado de los vehículos"
   },
   "paginator": {
     "itemsPerPage": "Elementos por página:",
@@ -561,6 +562,28 @@
       "saving": "Creando…",
       "created": "Se creó la cuenta {{email}}.",
       "duplicateEmail": "Ya existe una cuenta con este correo."
+    }
+  },
+  "evaluation": {
+    "title": "Estado de los vehículos",
+    "subtitle": "Qué vehículos pueden operar hoy, según su última evaluación.",
+    "filter": "Estado",
+    "caption": "Estado actual de cada vehículo",
+    "plate": "Placa",
+    "vehicle": "Vehículo",
+    "evaluatedAt": "Última evaluación",
+    "state": "Estado",
+    "override": "Bloqueo levantado",
+    "loading": "Cargando el estado de los vehículos…",
+    "empty": "No hay vehículos con este estado.",
+    "error": "No se pudo cargar el estado de los vehículos.",
+    "retry": "Reintentar",
+    "status": {
+      "ALL": "Todos",
+      "ENABLED": "Habilitado",
+      "OBSERVED": "Observado",
+      "NOT_ENABLED": "No habilitado",
+      "NOT_INSPECTED": "Sin inspección"
     }
   }
 }
