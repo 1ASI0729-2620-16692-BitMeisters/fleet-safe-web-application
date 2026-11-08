@@ -135,6 +135,13 @@ export class IncidentApi extends BaseApi {
   ): Observable<CorrectiveAction> =>
     this.registerCorrectiveActionEndpoint.registerCorrectiveAction(command);
 
+  attachCorrectiveActionEvidence = (
+    incidentId: string,
+    correctiveActionId: string,
+    file: File,
+  ): Observable<unknown> =>
+    this.registerCorrectiveActionEndpoint.attachEvidence(incidentId, correctiveActionId, file);
+
   // ── Repairs ────────────────────────────────────────────────
 
   /**

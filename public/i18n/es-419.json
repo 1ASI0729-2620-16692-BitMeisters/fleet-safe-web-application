@@ -279,7 +279,8 @@
       "performed-by": "Realizado por",
       "performed-at": "Realizado el",
       "evidence-url": "URL de Evidencia",
-      "register": "Registrar Acción"
+      "register": "Registrar Acción",
+      "evidence": "Adjunta la evidencia (JPEG, PNG o PDF)"
     },
     "repair": {
       "new-title": "Programar Reparación",
@@ -321,7 +322,9 @@
       "REPAIRED": "Reparado",
       "REPLACED": "Pieza reemplazada",
       "NO_ACTION_REQUIRED": "No requiere acción"
-    }
+    },
+    "unknown-user": "Usuario desconocido",
+    "view-evidence": "Ver evidencia"
   },
   "fleet": {
     "title": "Gestión de Flota",
@@ -496,7 +499,7 @@
     "number": "Número de documento",
     "issueDate": "Fecha de emisión",
     "expirationDate": "Fecha de vencimiento",
-    "fileUrl": "URL del documento digital (opcional)",
+    "fileUrl": "Adjunta el documento escaneado (JPEG, PNG o PDF)",
     "fileHint": "Enlace a un PDF o imagen existente. Aquí no se suben archivos.",
     "requiredExpiration": "La fecha de vencimiento es obligatoria.",
     "validation": "Completa los campos obligatorios. Usa fechas válidas, vencimiento igual o posterior a la emisión y una URL HTTP(S).",
@@ -521,7 +524,8 @@
       "VALID": "Vigente",
       "EXPIRING": "Próximo a vencer",
       "EXPIRED": "Vencido"
-    }
+    },
+    "replaceFile": "Reemplaza el documento escaneado"
   },
   "titles": {
     "home": "Panel",

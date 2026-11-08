@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IamStore } from '../../../../iam/application/iam.store';
 import { IncidentStore } from '../../../application/incident.store';
@@ -19,6 +20,7 @@ import { RegisterCorrectiveActionCommand } from '../../../domain/model/register-
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     TranslatePipe,
   ],
   templateUrl: './corrective-action-form.html',
@@ -35,6 +37,12 @@ export class CorrectiveActionForm {
    */
   private iamStore = inject(IamStore);
 
+  protected readonly evidence = signal<File | null>(null);
+
+  protected chooseEvidence(input: HTMLInputElement): void {
+    this.evidence.set(input.files?.[0] ?? null);
+  }
+
   private localNow(): string {
     const now = new Date();
     return new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
@@ -49,7 +57,6 @@ export class CorrectiveActionForm {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    evidenceUrl: new FormControl<string>('', { nonNullable: true }),
   });
 
   /**
@@ -72,10 +79,10 @@ export class CorrectiveActionForm {
       description: this.form.value.description!,
       performedBy: this.iamStore.currentUser()?.id ?? '',
       performedAt: new Date(this.form.value.performedAt!).toISOString(),
-      evidenceUrl: this.form.value.evidenceUrl ?? '',
+      evidenceUrl: '',
     });
 
-    this.store.registerCorrectiveAction(command);
+    this.store.registerCorrectiveAction(command, this.evidence());
     this.router.navigate(['incidents', this.incidentId]).then();
   }
 

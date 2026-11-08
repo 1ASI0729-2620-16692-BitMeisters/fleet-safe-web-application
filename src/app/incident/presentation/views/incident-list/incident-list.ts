@@ -37,7 +37,6 @@ export class IncidentList {
    * Columns to display in the table.
    */
   displayedColumns: string[] = [
-    'id',
     'vehicleId',
     'description',
     'severity',

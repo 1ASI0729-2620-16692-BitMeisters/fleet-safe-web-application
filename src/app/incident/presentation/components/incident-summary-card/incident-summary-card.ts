@@ -1,10 +1,11 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Incident } from '../../../domain/model/incident.entity';
+import { IncidentStore } from '../../../application/incident.store';
 
 /**
  * Displays a compact summary of an incident.
@@ -20,6 +21,8 @@ export class IncidentSummaryCard {
    * The incident to display.
    */
   incident = input.required<Incident>();
+
+  plateOf = inject(IncidentStore).plateOf;
 
   /**
    * Returns the CSS class for the severity badge.

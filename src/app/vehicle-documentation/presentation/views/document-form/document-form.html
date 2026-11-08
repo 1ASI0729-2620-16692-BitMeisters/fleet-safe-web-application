@@ -7,7 +7,7 @@
       <mat-form-field><mat-label>{{ 'documents.number' | translate }}</mat-label><input matInput formControlName="number" maxlength="80" /></mat-form-field>
       <mat-form-field><mat-label>{{ 'documents.issueDate' | translate }}</mat-label><input matInput type="date" formControlName="issueDate" /></mat-form-field>
       <mat-form-field><mat-label>{{ 'documents.expirationDate' | translate }}</mat-label><input matInput type="date" formControlName="expirationDate" /><mat-error>{{ 'documents.requiredExpiration' | translate }}</mat-error></mat-form-field>
-      <mat-form-field><mat-label>{{ 'documents.fileUrl' | translate }}</mat-label><input matInput type="url" formControlName="fileUrl" placeholder="https://" /><mat-hint>{{ 'documents.fileHint' | translate }}</mat-hint></mat-form-field>
+      <label class="file-picker"><mat-icon aria-hidden="true">attach_file</mat-icon>{{ file()?.name ?? (((document()?.fileUrl ? 'documents.replaceFile' : 'documents.fileUrl')) | translate) }}<input #fileInput type="file" accept="image/jpeg,image/png,application/pdf" (change)="chooseFile(fileInput)" /></label>
     </div>
     @if (form.invalid && form.touched) {<p role="alert" class="validation">{{ 'documents.validation' | translate }}</p>}
     <div class="actions"><button mat-button type="button" [disabled]="store.saving()" (click)="closed.emit(false)">{{ 'documents.cancel' | translate }}</button><button mat-flat-button type="submit" [disabled]="store.saving()">{{ (store.saving() ? 'documents.saving' : 'documents.save') | translate }}</button></div>

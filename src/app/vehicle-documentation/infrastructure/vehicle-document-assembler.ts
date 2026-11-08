@@ -30,7 +30,7 @@ export class VehicleDocumentAssembler implements BaseAssembler<
     number: entity.number,
     issueDate: entity.issueDate,
     expirationDate: entity.expirationDate,
-    fileUrl: entity.fileUrl,
+    fileUrl: null,
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
   });

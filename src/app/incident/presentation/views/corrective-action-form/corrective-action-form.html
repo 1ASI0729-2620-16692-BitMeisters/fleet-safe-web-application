@@ -14,10 +14,11 @@
     <input matInput type="datetime-local" formControlName="performedAt" required />
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'incident.corrective-action.evidence-url' | translate }}</mat-label>
-    <input matInput formControlName="evidenceUrl" />
-  </mat-form-field>
+  <label class="evidence-picker">
+    <mat-icon aria-hidden="true">attach_file</mat-icon>
+    {{ (evidence() ? evidence()!.name : ('incident.corrective-action.evidence' | translate)) }}
+    <input #evidenceInput type="file" accept="image/jpeg,image/png,application/pdf" (change)="chooseEvidence(evidenceInput)" />
+  </label>
 
   <div class="form-actions">
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">

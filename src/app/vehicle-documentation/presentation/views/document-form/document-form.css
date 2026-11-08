@@ -1,1 +1,19 @@
 .form-panel{background:white;border:1px solid #dbe3ed;border-radius:16px;padding:24px;margin:24px 0}.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.actions{display:flex;justify-content:flex-end;gap:12px;margin-top:20px}.validation{color:#b42318}@media(max-width:700px){.fields{grid-template-columns:1fr}}
+
+.file-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.file-picker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}

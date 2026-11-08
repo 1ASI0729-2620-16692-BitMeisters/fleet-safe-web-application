@@ -47,6 +47,7 @@ export class IncidentAssembler implements BaseAssembler<
       severity: resource.severity as IncidentSeverity,
       status: resource.status as IncidentStatus,
       reportedBy: resource.reportedBy,
+      reportedByName: resource.reportedByName ?? '',
       reportedAt: resource.reportedAt,
       resolutionType: resource.resolutionType ?? '',
       resolvedAt: resource.resolvedAt ?? '',
@@ -75,6 +76,7 @@ export class IncidentAssembler implements BaseAssembler<
       severity: entity.severity,
       status: entity.status,
       reportedBy: entity.reportedBy,
+      reportedByName: entity.reportedByName,
       reportedAt: entity.reportedAt,
       resolutionType: entity.resolutionType,
       resolvedAt: entity.resolvedAt,
@@ -96,6 +98,7 @@ export class IncidentAssembler implements BaseAssembler<
       incidentId: resource.incidentId,
       description: resource.description,
       performedBy: resource.performedBy,
+      performedByName: resource.performedByName ?? '',
       performedAt: resource.performedAt,
       evidenceUrl: resource.evidenceUrl,
     });
@@ -111,6 +114,7 @@ export class IncidentAssembler implements BaseAssembler<
       incidentId: entity.incidentId,
       description: entity.description,
       performedBy: entity.performedBy,
+      performedByName: entity.performedByName,
       performedAt: entity.performedAt,
       evidenceUrl: entity.evidenceUrl,
     }) as CorrectiveActionResource;
@@ -152,6 +156,7 @@ export class IncidentAssembler implements BaseAssembler<
       incidentId: resource.incidentId,
       note: resource.note,
       createdBy: resource.createdBy,
+      createdByName: resource.createdByName ?? '',
       createdAt: resource.createdAt,
     });
 
@@ -166,6 +171,7 @@ export class IncidentAssembler implements BaseAssembler<
       incidentId: entity.incidentId,
       note: entity.note,
       createdBy: entity.createdBy,
+      createdByName: entity.createdByName,
       createdAt: entity.createdAt,
     }) as IncidentFollowUpResource;
 }

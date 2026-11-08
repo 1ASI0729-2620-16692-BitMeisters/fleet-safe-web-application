@@ -279,7 +279,8 @@
       "performed-by": "Performed By",
       "performed-at": "Performed At",
       "evidence-url": "Evidence URL",
-      "register": "Register Action"
+      "register": "Register Action",
+      "evidence": "Attach evidence (JPEG, PNG or PDF)"
     },
     "repair": {
       "new-title": "Schedule Repair",
@@ -321,7 +322,9 @@
       "REPAIRED": "Repaired",
       "REPLACED": "Part replaced",
       "NO_ACTION_REQUIRED": "No action required"
-    }
+    },
+    "unknown-user": "Unknown user",
+    "view-evidence": "View evidence"
   },
   "fleet": {
     "title": "Fleet Management",
@@ -496,7 +499,7 @@
     "number": "Document number",
     "issueDate": "Issue date",
     "expirationDate": "Expiration date",
-    "fileUrl": "Digital document URL (optional)",
+    "fileUrl": "Attach the scanned document (JPEG, PNG or PDF)",
     "fileHint": "Link to an existing PDF or image. Files are not uploaded here.",
     "requiredExpiration": "Expiration date is required.",
     "validation": "Complete the required fields. Use valid dates, expiration on or after issue date, and an HTTP(S) URL.",
@@ -521,7 +524,8 @@
       "VALID": "Valid",
       "EXPIRING": "Expiring soon",
       "EXPIRED": "Expired"
-    }
+    },
+    "replaceFile": "Replace the scanned document"
   },
   "titles": {
     "home": "Dashboard",

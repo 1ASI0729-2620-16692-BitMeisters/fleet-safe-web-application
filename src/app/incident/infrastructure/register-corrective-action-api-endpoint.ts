@@ -45,4 +45,11 @@ export class RegisterCorrectiveActionApiEndpoint extends ErrorHandlingEnabledBas
       catchError(this.handleError('Failed to register corrective action')),
     );
   };
+
+  attachEvidence = (incidentId: string, correctiveActionId: string, file: File): Observable<unknown> => {
+    const form = new FormData();
+    form.append('file', file);
+    const url = `${registerCorrectiveActionApiEndpointUrl}/${incidentId}/corrective-actions/${correctiveActionId}/evidence`;
+    return this.http.post(url, form).pipe(catchError(this.handleError('Failed to attach the evidence')));
+  };
 }
