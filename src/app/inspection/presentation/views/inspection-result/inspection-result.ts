@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, effect, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,10 +26,14 @@ export class InspectionResult {
     return status ? ICONS[status] : 'hourglass_empty';
   });
 
+  private readonly inspectionId = inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '';
+
   constructor() {
-    const vehicleId = this.store.currentInspection()?.vehicleId ?? this.store.assignedVehicle()?.vehicleId;
-    if (vehicleId) this.store.loadVehicleStatus(vehicleId);
-    else this.router.navigate(['/inspections', inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '', 'summary']);
+    if (this.store.currentInspection()?.id !== this.inspectionId) this.store.loadInspection(this.inspectionId);
+    effect(() => {
+      const inspection = this.store.currentInspection();
+      if (inspection?.id === this.inspectionId) this.store.loadVehicleStatus(inspection.vehicleId);
+    });
   }
 
   protected backToStart(): void {
