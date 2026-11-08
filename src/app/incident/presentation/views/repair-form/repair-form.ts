@@ -45,10 +45,6 @@ export class RepairForm {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    finishedAt: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
   });
 
   /**
@@ -70,8 +66,8 @@ export class RepairForm {
       incidentId: this.incidentId,
       workshop: this.form.value.workshop!,
       cost: this.form.value.cost!,
-      startedAt: this.form.value.startedAt!,
-      finishedAt: this.form.value.finishedAt!,
+      startedAt: new Date(this.form.value.startedAt!).toISOString(),
+      finishedAt: null,
     });
 
     this.store.scheduleRepair(command);
