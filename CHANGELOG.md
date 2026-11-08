@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-11-08
+
+### Added
+- Sign-in with the platform account, protected routes, the signed-in user in the top bar and sign-out.
+- The administrator lists, opens and changes the accounts of the company.
+- The documents of each vehicle, the inspection checklist with the observations and photos of each finding, the review of the inspection and the resulting condition of the vehicle, all through the platform backend.
+- The vehicles of the fleet by operational status.
+- The company, its fleets and vehicles, and the incidents with their corrective actions, repairs and follow-ups, through the platform backend.
+- The vehicle form, detail, list filters and the assignment form with its history.
+
+### Fixed
+- The application is served from the path of the renamed repository.
+
 ## [0.3.0] - 2026-10-26
 
 ### Added
