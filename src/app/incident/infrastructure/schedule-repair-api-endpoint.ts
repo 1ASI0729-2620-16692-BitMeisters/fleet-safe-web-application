@@ -7,7 +7,7 @@ import { ScheduleRepairResource, ScheduleRepairResponse } from './schedule-repai
 import { Repair } from '../domain/model/repair.entity';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
 
-const scheduleRepairApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderScheduleRepairEndpointPath}`;
+const scheduleRepairApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendIncidentsEndpointPath}`;
 
 /**
  * Encapsulates repair scheduling HTTP operations.

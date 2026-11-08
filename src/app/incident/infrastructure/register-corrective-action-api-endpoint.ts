@@ -10,7 +10,7 @@ import {
 import { CorrectiveAction } from '../domain/model/corrective-action.entity';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
 
-const registerCorrectiveActionApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderRegisterCorrectiveActionEndpointPath}`;
+const registerCorrectiveActionApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendIncidentsEndpointPath}`;
 
 /**
  * Encapsulates corrective action registration HTTP operations.
