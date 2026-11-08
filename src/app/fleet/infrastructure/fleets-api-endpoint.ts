@@ -14,7 +14,7 @@ export class FleetsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderFleetsEndpointPath}`,
+      `${environment.backendApiBaseUrl}${environment.backendFleetsEndpointPath}`,
       new FleetAssembler(),
     );
   }

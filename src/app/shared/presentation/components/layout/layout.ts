@@ -78,6 +78,7 @@ export class Layout {
       label: 'layout.evaluationAndAuthorization',
       icon: 'verified_user',
       category: 'support',
+      roles: [Role.FLEET_SUPERVISOR, Role.ADMINISTRATOR],
     },
     {
       link: '/fleet',

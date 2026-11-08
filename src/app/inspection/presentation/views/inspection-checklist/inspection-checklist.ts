@@ -1,6 +1,7 @@
 import { Component, ElementRef, computed, effect, inject, signal, viewChild } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -10,7 +11,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { InspectionStore } from '../../../application/inspection.store';
 import { InspectionItem } from '../../../domain/model/inspection-item.entity';
 import { ItemSystem } from '../../../domain/model/item-system.enum';
+import { Observation } from '../../../domain/model/observation.entity';
 import { ResultValue } from '../../../domain/model/result-value.enum';
+import { FindingDialog, FindingDialogData } from '../../components/finding-dialog/finding-dialog';
 import { ResultSelector } from '../../components/result-selector/result-selector';
 import { SystemProgress, SystemsList } from '../../components/systems-list/systems-list';
 import { SystemsSheet, SystemsSheetData } from '../../components/systems-sheet/systems-sheet';
@@ -50,6 +53,7 @@ export class InspectionChecklist {
   protected readonly store = inject(InspectionStore);
   private readonly router = inject(Router);
   private readonly bottomSheet = inject(MatBottomSheet);
+  private readonly dialog = inject(MatDialog);
   private readonly inspectionId = inject(ActivatedRoute).snapshot.paramMap.get('id') ?? '';
   private readonly top = viewChild<ElementRef<HTMLElement>>('top');
 
@@ -123,6 +127,15 @@ export class InspectionChecklist {
   protected isFinding(item: InspectionItem): boolean {
     const result = this.resultOf(item);
     return result === ResultValue.OBSERVED || result === ResultValue.FAIL;
+  }
+
+  protected observationOf(item: InspectionItem): Observation | undefined {
+    return this.store.currentInspection()?.resultFor(item.id)?.observations[0];
+  }
+
+  protected openFinding(item: InspectionItem): void {
+    const data: FindingDialogData = { item };
+    this.dialog.open<FindingDialog, FindingDialogData, boolean>(FindingDialog, { data, width: '480px' });
   }
 
   protected answer(item: InspectionItem, result: ResultValue): void {

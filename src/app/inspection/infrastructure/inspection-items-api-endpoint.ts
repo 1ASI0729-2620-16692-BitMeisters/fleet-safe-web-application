@@ -5,7 +5,7 @@ import { InspectionItem } from '../domain/model/inspection-item.entity';
 import { InspectionItemAssembler } from './inspection-item-assembler';
 import { InspectionItemResource, InspectionItemsResponse } from './inspection-items-response';
 
-const inspectionItemsApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderInspectionItemsEndpointPath}`;
+const inspectionItemsApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendInspectionItemsEndpointPath}`;
 
 export class InspectionItemsApiEndpoint extends BaseApiEndpoint<
   InspectionItem,

@@ -32,8 +32,8 @@ export class InspectionAssembler implements BaseAssembler<
       startedAt: new Date(resource.startedAt),
       completedAt: resource.completedAt ? new Date(resource.completedAt) : null,
       results: resource.results.map((result) => this.toResultEntryFromResource(result)),
-      createdAt: new Date(resource.createdAt),
-      updatedAt: new Date(resource.updatedAt),
+      createdAt: new Date(resource.createdAt ?? resource.startedAt),
+      updatedAt: new Date(resource.updatedAt ?? resource.completedAt ?? resource.startedAt),
     });
 
   toResourceFromEntity = (entity: Inspection): InspectionResource => ({
@@ -49,20 +49,20 @@ export class InspectionAssembler implements BaseAssembler<
     updatedAt: entity.updatedAt.toISOString(),
   });
 
-  private toResultEntryFromResource = (resource: InspectionResultResource): InspectionResultEntry =>
+  toResultEntryFromResource = (resource: InspectionResultResource): InspectionResultEntry =>
     new InspectionResultEntry({
       id: resource.id,
       inspectionItemId: resource.inspectionItemId,
       itemName: resource.itemName,
       itemCategory: resource.itemCategory as ItemCategory,
       result: resource.result as ResultValue,
-      createdAt: new Date(resource.createdAt),
+      createdAt: new Date(resource.createdAt ?? Date.now()),
       observations: resource.observations.map((observation) =>
         this.toObservationFromResource(observation),
       ),
     });
 
-  private toObservationFromResource = (resource: ObservationResource): Observation =>
+  toObservationFromResource = (resource: ObservationResource): Observation =>
     new Observation({
       id: resource.id,
       description: resource.description,
@@ -71,7 +71,7 @@ export class InspectionAssembler implements BaseAssembler<
       evidences: resource.evidences.map((evidence) => this.toEvidenceFromResource(evidence)),
     });
 
-  private toEvidenceFromResource = (resource: EvidenceResource): Evidence =>
+  toEvidenceFromResource = (resource: EvidenceResource): Evidence =>
     new Evidence({
       id: resource.id,
       fileUrl: resource.fileUrl,

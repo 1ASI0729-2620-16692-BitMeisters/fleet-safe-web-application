@@ -25,7 +25,7 @@ export class VehicleInspectionsApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderInspectionsEndpointPath}`,
+      `${environment.backendApiBaseUrl}${environment.backendInspectionsEndpointPath}`,
       new VehicleInspectionSummaryAssembler(),
     );
   }

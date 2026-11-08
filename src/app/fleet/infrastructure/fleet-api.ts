@@ -32,7 +32,7 @@ export class FleetApi extends BaseApi {
   private readonly vehicleInspectionsEndpoint = new VehicleInspectionsApiEndpoint(this.http);
 
   getCompanies(): Observable<Company[]> {
-    return this.companiesEndpoint.getAll();
+    return this.companiesEndpoint.getMine();
   }
 
   getFleets(): Observable<Fleet[]> {
