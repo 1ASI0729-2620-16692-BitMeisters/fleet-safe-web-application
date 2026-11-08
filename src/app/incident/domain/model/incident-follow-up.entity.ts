@@ -8,6 +8,7 @@ export class IncidentFollowUp implements BaseEntity {
   #incidentId: string;
   #note: string;
   #createdBy: string;
+  #createdByName: string;
   #createdAt: string;
 
   constructor(props: {
@@ -15,12 +16,14 @@ export class IncidentFollowUp implements BaseEntity {
     incidentId: string;
     note: string;
     createdBy: string;
+    createdByName?: string;
     createdAt: string;
   }) {
     this.#id = props.id;
     this.#incidentId = props.incidentId;
     this.#note = props.note;
     this.#createdBy = props.createdBy;
+    this.#createdByName = props.createdByName ?? '';
     this.#createdAt = props.createdAt;
   }
 
@@ -43,6 +46,10 @@ export class IncidentFollowUp implements BaseEntity {
   }
   set note(value: string) {
     this.#note = value;
+  }
+
+  get createdByName(): string {
+    return this.#createdByName;
   }
 
   get createdBy(): string {

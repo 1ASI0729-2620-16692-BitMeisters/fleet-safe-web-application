@@ -279,7 +279,8 @@
       "performed-by": "Realizado por",
       "performed-at": "Realizado el",
       "evidence-url": "URL de Evidencia",
-      "register": "Registrar Acción"
+      "register": "Registrar Acción",
+      "evidence": "Adjunta la evidencia (JPEG, PNG o PDF)"
     },
     "repair": {
       "new-title": "Programar Reparación",
@@ -321,7 +322,9 @@
       "REPAIRED": "Reparado",
       "REPLACED": "Pieza reemplazada",
       "NO_ACTION_REQUIRED": "No requiere acción"
-    }
+    },
+    "unknown-user": "Usuario desconocido",
+    "view-evidence": "Ver evidencia"
   },
   "fleet": {
     "title": "Gestión de Flota",

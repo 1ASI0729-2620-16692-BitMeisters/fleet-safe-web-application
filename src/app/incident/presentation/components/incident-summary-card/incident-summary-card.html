@@ -1,10 +1,10 @@
 <mat-card class="incident-card">
   <mat-card-header>
     <mat-card-title>
-      {{ 'incident.summary.title' | translate }} #{{ incident().id }}
+      {{ 'incident.summary.title' | translate }}
     </mat-card-title>
     <mat-card-subtitle>
-      {{ incident().vehicleId }}
+      {{ plateOf(incident().vehicleId) }}
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>

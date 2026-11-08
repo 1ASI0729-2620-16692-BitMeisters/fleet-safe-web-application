@@ -8,6 +8,7 @@ export class CorrectiveAction implements BaseEntity {
   #incidentId: string;
   #description: string;
   #performedBy: string;
+  #performedByName: string;
   #performedAt: string;
   #evidenceUrl: string;
 
@@ -16,6 +17,7 @@ export class CorrectiveAction implements BaseEntity {
     incidentId: string;
     description: string;
     performedBy: string;
+    performedByName?: string;
     performedAt: string;
     evidenceUrl: string;
   }) {
@@ -23,6 +25,7 @@ export class CorrectiveAction implements BaseEntity {
     this.#incidentId = props.incidentId;
     this.#description = props.description;
     this.#performedBy = props.performedBy;
+    this.#performedByName = props.performedByName ?? '';
     this.#performedAt = props.performedAt;
     this.#evidenceUrl = props.evidenceUrl;
   }
@@ -46,6 +49,10 @@ export class CorrectiveAction implements BaseEntity {
   }
   set description(value: string) {
     this.#description = value;
+  }
+
+  get performedByName(): string {
+    return this.#performedByName;
   }
 
   get performedBy(): string {

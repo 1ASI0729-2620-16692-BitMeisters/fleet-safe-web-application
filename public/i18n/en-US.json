@@ -279,7 +279,8 @@
       "performed-by": "Performed By",
       "performed-at": "Performed At",
       "evidence-url": "Evidence URL",
-      "register": "Register Action"
+      "register": "Register Action",
+      "evidence": "Attach evidence (JPEG, PNG or PDF)"
     },
     "repair": {
       "new-title": "Schedule Repair",
@@ -321,7 +322,9 @@
       "REPAIRED": "Repaired",
       "REPLACED": "Part replaced",
       "NO_ACTION_REQUIRED": "No action required"
-    }
+    },
+    "unknown-user": "Unknown user",
+    "view-evidence": "View evidence"
   },
   "fleet": {
     "title": "Fleet Management",

@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { retry } from 'rxjs';
+import { retry, concatMap, map, of } from 'rxjs';
 import { IncidentApi } from '../infrastructure/incident-api';
 import { Incident } from '../domain/model/incident.entity';
 import { IncidentType } from '../domain/model/incident-type.entity';
@@ -246,17 +246,26 @@ export class IncidentStore {
    * Registers a corrective action for an incident.
    * @param command - Corrective action command.
    */
-  registerCorrectiveAction = (command: RegisterCorrectiveActionCommand): void => {
+  registerCorrectiveAction = (command: RegisterCorrectiveActionCommand, evidence: File | null = null): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.incidentApi
       .registerCorrectiveAction(command)
-      .pipe(retry(2))
+      .pipe(
+        concatMap((action) =>
+          evidence
+            ? this.incidentApi
+                .attachCorrectiveActionEvidence(action.incidentId, action.id, evidence)
+                .pipe(map(() => action))
+            : of(action),
+        ),
+      )
       .subscribe({
         next: (action) => this.reloadIncident(action.incidentId),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to register corrective action'));
           this.loadingSignal.set(false);
+          this.reloadIncident(command.incidentId);
         },
       });
   };
@@ -329,12 +338,7 @@ export class IncidentStore {
       .resolveIncident(command)
       .pipe(retry(2))
       .subscribe({
-        next: (updated) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => (i.id === updated.id ? updated : i)),
-          );
-          this.loadingSignal.set(false);
-        },
+        next: (updated) => this.reloadIncident(updated.id),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to resolve incident'));
           this.loadingSignal.set(false);
