@@ -1,0 +1,68 @@
+<h2 mat-dialog-title>{{ data.item.name }}</h2>
+
+<mat-dialog-content>
+  @if (observation(); as saved) {
+    <p class="saved-observation">{{ saved.description }}</p>
+    @if (saved.evidences.length) {
+      <ul class="photos">
+        @for (evidence of saved.evidences; track evidence.id) {
+          <li><img [src]="evidence.fileUrl" [alt]="'inspection.dialog.evidenceLabel' | translate" /></li>
+        }
+      </ul>
+    }
+  } @else {
+    <mat-form-field class="observation">
+      <mat-label>{{ 'inspection.dialog.observationLabel' | translate }}</mat-label>
+      <textarea
+        matInput
+        rows="4"
+        maxlength="1000"
+        [placeholder]="'inspection.dialog.observationPlaceholder' | translate"
+        [ngModel]="description()"
+        (ngModelChange)="description.set($event)"
+      ></textarea>
+    </mat-form-field>
+  }
+
+  <p class="evidence-label">
+    {{ 'inspection.dialog.evidenceLabel' | translate }}
+    @if (data.item.requiresEvidence) {
+      · {{ 'inspection.dialog.requiredOnThisItem' | translate }}
+    }
+  </p>
+
+  <ul class="new-photos">
+    @for (photo of photos(); track photo) {
+      <li>
+        <mat-icon aria-hidden="true">image</mat-icon>
+        <span>{{ photo.name }}</span>
+        <button mat-icon-button type="button" [attr.aria-label]="'inspection.dialog.removePhoto' | translate" (click)="removePhoto(photo)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </li>
+    }
+  </ul>
+
+  <label class="add-photo">
+    <mat-icon aria-hidden="true">add_a_photo</mat-icon>
+    {{ 'inspection.dialog.addPhoto' | translate }}
+    <input #photoInput type="file" accept="image/jpeg,image/png" multiple capture="environment" (change)="addPhotos(photoInput)" />
+  </label>
+
+  @if (rejectedPhoto()) {
+    <p class="error" role="alert">{{ 'inspection.dialog.photoFormatError' | translate }}</p>
+  }
+  @if (photoMissing()) {
+    <p class="error" role="alert">{{ 'inspection.dialog.photoRequiredError' | translate }}</p>
+  }
+  @if (store.error(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close type="button">{{ 'inspection.dialog.cancel' | translate }}</button>
+  <button mat-flat-button type="button" [disabled]="!canSave() || store.savingFinding()" (click)="save()">
+    {{ 'inspection.dialog.saveAndContinue' | translate }}
+  </button>
+</mat-dialog-actions>

@@ -62,7 +62,7 @@ export class InspectionAssembler implements BaseAssembler<
       ),
     });
 
-  private toObservationFromResource = (resource: ObservationResource): Observation =>
+  toObservationFromResource = (resource: ObservationResource): Observation =>
     new Observation({
       id: resource.id,
       description: resource.description,
@@ -71,7 +71,7 @@ export class InspectionAssembler implements BaseAssembler<
       evidences: resource.evidences.map((evidence) => this.toEvidenceFromResource(evidence)),
     });
 
-  private toEvidenceFromResource = (resource: EvidenceResource): Evidence =>
+  toEvidenceFromResource = (resource: EvidenceResource): Evidence =>
     new Evidence({
       id: resource.id,
       fileUrl: resource.fileUrl,

@@ -7,6 +7,10 @@ import { InspectionItem } from '../domain/model/inspection-item.entity';
 import { Inspection } from '../domain/model/inspection.entity';
 import { InspectionResultEntry } from '../domain/model/inspection-result-entry.entity';
 import { ResultValue } from '../domain/model/result-value.enum';
+import { Evidence } from '../domain/model/evidence.entity';
+import { Observation } from '../domain/model/observation.entity';
+import { VehicleOperationalStatus } from '../domain/model/vehicle-operational-status.enum';
+import { VehicleStatusApiEndpoint } from './vehicle-status-api-endpoint';
 import { AssignedVehicleApiEndpoint } from './assigned-vehicle-api-endpoint';
 import { AssignedVehicleAssembler } from './assigned-vehicle-assembler';
 import { InspectionItemsApiEndpoint } from './inspection-items-api-endpoint';
@@ -17,6 +21,7 @@ export class InspectionApi extends BaseApi {
   private readonly http = inject(HttpClient);
   private readonly inspectionsEndpoint = new InspectionsApiEndpoint(this.http);
   private readonly inspectionItemsEndpoint = new InspectionItemsApiEndpoint(this.http);
+  private readonly vehicleStatusEndpoint = new VehicleStatusApiEndpoint(this.http);
   private readonly assignedVehicleEndpoint = new AssignedVehicleApiEndpoint(
     this.http,
     new AssignedVehicleAssembler(),
@@ -34,6 +39,17 @@ export class InspectionApi extends BaseApi {
 
   updateResult = (inspectionId: string, resultId: string, result: ResultValue): Observable<InspectionResultEntry> =>
     this.inspectionsEndpoint.updateResult(inspectionId, resultId, result);
+
+  addObservation = (inspectionId: string, resultId: string, description: string): Observable<Observation> =>
+    this.inspectionsEndpoint.addObservation(inspectionId, resultId, description);
+
+  attachEvidence = (inspectionId: string, resultId: string, observationId: string, photo: File): Observable<Evidence> =>
+    this.inspectionsEndpoint.attachEvidence(inspectionId, resultId, observationId, photo);
+
+  completeInspection = (inspectionId: string): Observable<Inspection> => this.inspectionsEndpoint.complete(inspectionId);
+
+  getVehicleStatus = (vehicleId: string): Observable<VehicleOperationalStatus> =>
+    this.vehicleStatusEndpoint.getStatus(vehicleId);
 
   getAssignedVehicle = (): Observable<AssignedVehicle> =>
     this.assignedVehicleEndpoint.getAssignedVehicle();

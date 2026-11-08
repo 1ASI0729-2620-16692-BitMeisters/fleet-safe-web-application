@@ -107,7 +107,10 @@
       "answerAllToContinue": "Answer every item to continue.",
       "overall": "{{answered}} of {{total}} items answered",
       "safety": "Safety",
-      "photo": "Photo if it fails"
+      "photo": "Photo if it fails",
+      "observationSaved": "Observation saved · {{count}} photos",
+      "addObservation": "Add observation",
+      "addPhotos": "Add photos"
     },
     "dialog": {
       "observationLabel": "Observation",
@@ -115,7 +118,11 @@
       "evidenceLabel": "Evidence",
       "requiredOnThisItem": "required on this item",
       "photoRequiredError": "At least one photograph is required for this safety component.",
-      "saveAndContinue": "Save and continue"
+      "saveAndContinue": "Save and continue",
+      "addPhoto": "Add photo",
+      "removePhoto": "Remove photo",
+      "photoFormatError": "Only JPEG or PNG photos are accepted.",
+      "cancel": "Cancel"
     },
     "summary": {
       "title": "Summary",
@@ -124,7 +131,8 @@
       "observed": "Observed",
       "failed": "Failed",
       "evaluationNotice": "On submit, the system evaluates the vehicle against your company rules.",
-      "submitInspection": "Submit inspection"
+      "submitInspection": "Submit inspection",
+      "pendingFindings": "{{count}} findings still need their observation or photo."
     },
     "resultScreen": {
       "title": "Result",
@@ -133,7 +141,23 @@
       "notEnabledInstruction": "The incident was registered and your supervisor has been notified. Do not start the operation until you receive instructions.",
       "observedInstruction": "The vehicle is authorized to operate with findings recorded for preventive follow-up.",
       "enabledInstruction": "The vehicle is fully authorized to operate.",
-      "backToStart": "Back to start"
+      "backToStart": "Back to start",
+      "status": {
+        "ENABLED": "Enabled",
+        "OBSERVED": "Observed",
+        "NOT_ENABLED": "Not Enabled"
+      },
+      "text": {
+        "ENABLED": "Vehicle {{plate}} can operate.",
+        "OBSERVED": "Vehicle {{plate}} can operate with findings.",
+        "NOT_ENABLED": "Vehicle {{plate}} does not meet the conditions to operate."
+      },
+      "instruction": {
+        "ENABLED": "The vehicle is fully authorized to operate.",
+        "OBSERVED": "The vehicle is authorized to operate with findings recorded for preventive follow-up.",
+        "NOT_ENABLED": "The incident was registered and your supervisor has been notified. Do not start the operation until you receive instructions."
+      },
+      "evaluating": "Evaluating the vehicle…"
     },
     "history": {
       "title": "Inspection history",
@@ -501,7 +525,9 @@
     "pageNotFound": "Page not found",
     "signIn": "Sign in",
     "users": "Users",
-    "newUser": "New user"
+    "newUser": "New user",
+    "inspectionSummary": "Inspection summary",
+    "inspectionResult": "Inspection result"
   },
   "paginator": {
     "itemsPerPage": "Items per page:",
