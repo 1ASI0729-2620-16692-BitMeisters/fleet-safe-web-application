@@ -5,6 +5,8 @@ import { BaseApi } from '../../shared/infrastructure/base-api';
 import { AssignedVehicle } from '../domain/model/assigned-vehicle.entity';
 import { InspectionItem } from '../domain/model/inspection-item.entity';
 import { Inspection } from '../domain/model/inspection.entity';
+import { InspectionResultEntry } from '../domain/model/inspection-result-entry.entity';
+import { ResultValue } from '../domain/model/result-value.enum';
 import { AssignedVehicleApiEndpoint } from './assigned-vehicle-api-endpoint';
 import { AssignedVehicleAssembler } from './assigned-vehicle-assembler';
 import { InspectionItemsApiEndpoint } from './inspection-items-api-endpoint';
@@ -27,8 +29,11 @@ export class InspectionApi extends BaseApi {
   createInspection = (inspection: Inspection): Observable<Inspection> =>
     this.inspectionsEndpoint.create(inspection);
 
-  updateInspection = (inspection: Inspection): Observable<Inspection> =>
-    this.inspectionsEndpoint.update(inspection, inspection.id);
+  registerResult = (inspectionId: string, inspectionItemId: string, result: ResultValue): Observable<InspectionResultEntry> =>
+    this.inspectionsEndpoint.registerResult(inspectionId, inspectionItemId, result);
+
+  updateResult = (inspectionId: string, resultId: string, result: ResultValue): Observable<InspectionResultEntry> =>
+    this.inspectionsEndpoint.updateResult(inspectionId, resultId, result);
 
   getAssignedVehicle = (): Observable<AssignedVehicle> =>
     this.assignedVehicleEndpoint.getAssignedVehicle();

@@ -9,6 +9,7 @@ import { ItemCategory } from '../domain/model/item-category.enum';
 import { ItemSystem } from '../domain/model/item-system.enum';
 import { ResultValue } from '../domain/model/result-value.enum';
 import { InspectionApi } from '../infrastructure/inspection-api';
+import { InspectionResultEntry } from '../domain/model/inspection-result-entry.entity';
 import { InspectionStore } from './inspection.store';
 
 const vehicle = new AssignedVehicle({
@@ -52,13 +53,26 @@ function anInspection(): Inspection {
   });
 }
 
+function aResult(id: string, result: ResultValue): InspectionResultEntry {
+  return new InspectionResultEntry({
+    id,
+    inspectionItemId: 'brakes',
+    itemName: 'Brake system',
+    itemCategory: ItemCategory.SAFETY_COMPONENT,
+    result,
+    createdAt: new Date('2026-09-15T10:40:00Z'),
+    observations: [],
+  });
+}
+
 describe('InspectionStore', () => {
   const api = {
     getInspectionItems: vi.fn(),
     getAssignedVehicle: vi.fn(),
     getInspection: vi.fn(),
     createInspection: vi.fn(),
-    updateInspection: vi.fn(),
+    registerResult: vi.fn(),
+    updateResult: vi.fn(),
   };
   const notifier = { success: vi.fn() };
 
@@ -120,41 +134,51 @@ describe('InspectionStore', () => {
     expect(notifier.success).not.toHaveBeenCalled();
   });
 
-  it('saves the answer of an item in the current inspection', () => {
+  it('registers the first answer of an item and keeps the result the backend returns', () => {
     api.getInspection.mockReturnValue(of(anInspection()));
-    api.updateInspection.mockImplementation((inspection: Inspection) => of(inspection));
+    api.registerResult.mockReturnValue(of(aResult('result-1', ResultValue.FAIL)));
     const store = createStore();
     store.loadInspection('inspection-1');
 
     store.answerItem(brakes, ResultValue.FAIL);
 
-    const saved: Inspection = api.updateInspection.mock.calls[0][0];
-    expect(saved.resultFor('brakes')?.result).toBe(ResultValue.FAIL);
-    expect(store.currentInspection()?.resultFor('brakes')?.itemName).toBe('Brake system');
+    expect(api.registerResult).toHaveBeenCalledWith('inspection-1', 'brakes', ResultValue.FAIL);
+    expect(store.currentInspection()?.resultFor('brakes')?.id).toBe('result-1');
     expect(store.savingItemId()).toBeNull();
   });
 
-  it('restores the previous answers when saving fails', () => {
+  it('changes an answer that was already registered', () => {
+    api.getInspection.mockReturnValue(of(anInspection().withResult(aResult('result-1', ResultValue.FAIL))));
+    api.updateResult.mockReturnValue(of(aResult('result-1', ResultValue.OK)));
+    const store = createStore();
+    store.loadInspection('inspection-1');
+
+    store.answerItem(brakes, ResultValue.OK);
+
+    expect(api.updateResult).toHaveBeenCalledWith('inspection-1', 'result-1', ResultValue.OK);
+    expect(store.currentInspection()?.resultFor('brakes')?.result).toBe(ResultValue.OK);
+  });
+
+  it('keeps the previous answer and the error when saving fails', () => {
     api.getInspection.mockReturnValue(of(anInspection()));
-    api.updateInspection.mockReturnValue(throwError(() => new Error('Failed to update entity: 0')));
+    api.registerResult.mockReturnValue(throwError(() => new Error('Failed to save the answer: 409')));
     const store = createStore();
     store.loadInspection('inspection-1');
 
     store.answerItem(brakes, ResultValue.OK);
 
     expect(store.currentInspection()?.resultFor('brakes')).toBeUndefined();
-    expect(store.error()).toBe('Failed to update entity: 0');
+    expect(store.error()).toBe('Failed to save the answer: 409');
   });
 
   it('does not save an item again with the same answer', () => {
-    api.getInspection.mockReturnValue(of(anInspection()));
-    api.updateInspection.mockImplementation((inspection: Inspection) => of(inspection));
+    api.getInspection.mockReturnValue(of(anInspection().withResult(aResult('result-1', ResultValue.OK))));
     const store = createStore();
     store.loadInspection('inspection-1');
 
     store.answerItem(brakes, ResultValue.OK);
-    store.answerItem(brakes, ResultValue.OK);
 
-    expect(api.updateInspection).toHaveBeenCalledTimes(1);
+    expect(api.registerResult).not.toHaveBeenCalled();
+    expect(api.updateResult).not.toHaveBeenCalled();
   });
 });

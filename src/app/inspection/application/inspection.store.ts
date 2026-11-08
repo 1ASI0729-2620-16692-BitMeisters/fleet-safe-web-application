@@ -4,7 +4,6 @@ import { retry } from 'rxjs';
 import { Notifier } from '../../shared/application/notifier';
 import { AssignedVehicle } from '../domain/model/assigned-vehicle.entity';
 import { InspectionItem } from '../domain/model/inspection-item.entity';
-import { InspectionResultEntry } from '../domain/model/inspection-result-entry.entity';
 import { Inspection } from '../domain/model/inspection.entity';
 import { ResultValue } from '../domain/model/result-value.enum';
 import { InspectionApi } from '../infrastructure/inspection-api';
@@ -133,32 +132,23 @@ export class InspectionStore {
     const existing = inspection.resultFor(item.id);
     if (existing?.result === result) return;
 
-    const answeredInspection = inspection.withResult(
-      new InspectionResultEntry({
-        id: existing?.id ?? crypto.randomUUID(),
-        inspectionItemId: item.id,
-        itemName: item.name,
-        itemCategory: item.category,
-        result,
-        createdAt: existing?.createdAt ?? new Date(),
-        observations: existing?.observations ?? [],
-      }),
-    );
+    const request = existing
+      ? this.inspectionApi.updateResult(inspection.id, existing.id, result)
+      : this.inspectionApi.registerResult(inspection.id, item.id, result);
 
     this.savingItemIdSignal.set(item.id);
     this.errorSignal.set(null);
-    this.currentInspectionSignal.set(answeredInspection);
-    this.inspectionApi
-      .updateInspection(answeredInspection)
-      .pipe(retry(2))
-      .subscribe({
-        next: () => this.savingItemIdSignal.set(null),
-        error: (err) => {
-          this.currentInspectionSignal.set(inspection);
-          this.errorSignal.set(this.formatError(err, 'Failed to save the answer'));
-          this.savingItemIdSignal.set(null);
-        },
-      });
+    request.subscribe({
+      next: (saved) => {
+        const current = this.currentInspectionSignal();
+        if (current) this.currentInspectionSignal.set(current.withResult(saved));
+        this.savingItemIdSignal.set(null);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to save the answer'));
+        this.savingItemIdSignal.set(null);
+      },
+    });
   };
 
   private isNotFound = (error: unknown): boolean =>
