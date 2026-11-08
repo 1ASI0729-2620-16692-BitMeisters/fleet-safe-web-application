@@ -1,16 +1,22 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
 import type { VehicleAssignment } from './vehicle-assignment.entity';
+import {
+  normalizePlate,
+  VehicleDetails,
+  VehicleDetailsProps,
+} from './vehicle-details.value-object';
+import { VehicleStatus } from './vehicle-status.enum';
+import { VehicleType } from './vehicle-type.enum';
 
-export enum VehicleStatus {
-  ENABLED = 'ENABLED',
-  OBSERVED = 'OBSERVED',
-  NOT_ENABLED = 'NOT_ENABLED'
-}
-export enum VehicleType{
-  THIN = 'THIN',
-  MEDIUM = 'MEDIUM',
-  LARGE = 'LARGE'
-}
+/**
+ * Condition of a vehicle that has just been registered.
+ *
+ * @remarks
+ * A vehicle is operational until an evaluation blocks or observes it. Starting it as
+ * `NOT_ENABLED` would make the first assignment impossible, and without an assignment there is
+ * no inspection that could ever enable it.
+ */
+export const INITIAL_VEHICLE_STATUS = VehicleStatus.ENABLED;
 
 export class Vehicle implements BaseEntity {
   #id: string;
@@ -49,6 +55,33 @@ export class Vehicle implements BaseEntity {
     this.#currentStatus = props.currentStatus;
     this.#createdAt = props.createdAt;
     this.#updatedAt = props.updatedAt;
+  }
+
+  /**
+   * Registers a new vehicle in its initial operational condition.
+   *
+   * @param props - Identity, description and registration moment of the vehicle.
+   */
+  static register(props: { id: string; details: VehicleDetails; now: string }): Vehicle {
+    return new Vehicle({
+      id: props.id,
+      ...Vehicle.#propsFromDetails(props.details),
+      currentStatus: INITIAL_VEHICLE_STATUS,
+      createdAt: props.now,
+      updatedAt: props.now,
+    });
+  }
+
+  static #propsFromDetails(details: VehicleDetailsProps): VehicleDetailsProps {
+    return {
+      fleetId: details.fleetId,
+      plate: details.plate,
+      brand: details.brand,
+      model: details.model,
+      year: details.year,
+      type: details.type,
+      capacity: details.capacity,
+    };
   }
 
   get id(): string {
@@ -95,6 +128,42 @@ export class Vehicle implements BaseEntity {
     return this.#updatedAt;
   }
 
+  /**
+   * Describes the vehicle without its identity or condition, e.g. to edit it in a form.
+   */
+  toDetails(): VehicleDetails {
+    return new VehicleDetails(Vehicle.#propsFromDetails(this));
+  }
+
+  /**
+   * Answers whether the vehicle carries the given plate, ignoring case and separators.
+   *
+   * @param plate - Plate to compare.
+   */
+  hasPlate(plate: string): boolean {
+    return normalizePlate(this.#plate) === normalizePlate(plate);
+  }
+
+  /**
+   * Produces the same vehicle with new details.
+   *
+   * @remarks
+   * Identity, creation date and operational condition are kept: the condition can only change
+   * through {@link applyAuthorizationResult}.
+   *
+   * @param details - New description of the vehicle.
+   * @param updatedAt - Moment of the update.
+   */
+  withDetails(details: VehicleDetails, updatedAt: string): Vehicle {
+    return new Vehicle({
+      id: this.#id,
+      ...Vehicle.#propsFromDetails(details),
+      currentStatus: this.#currentStatus,
+      createdAt: this.#createdAt,
+      updatedAt,
+    });
+  }
+
   applyAuthorizationResult(status: VehicleStatus): void {
     this.#currentStatus = status;
   }
@@ -103,10 +172,13 @@ export class Vehicle implements BaseEntity {
     return this.#currentStatus === VehicleStatus.ENABLED;
   }
 
-  getActiveAssignment(assignments: readonly VehicleAssignment[]): VehicleAssignment | null {
+  getActiveAssignment(
+    assignments: readonly VehicleAssignment[],
+    date: Date = new Date(),
+  ): VehicleAssignment | null {
     return (
       assignments.find(
-        (assignment) => assignment.vehicleId === this.#id && assignment.isActiveOn(new Date()),
+        (assignment) => assignment.vehicleId === this.#id && assignment.isActiveOn(date),
       ) ?? null
     );
   }

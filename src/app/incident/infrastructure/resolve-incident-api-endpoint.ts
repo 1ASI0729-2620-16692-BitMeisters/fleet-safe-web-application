@@ -7,7 +7,7 @@ import { ResolveIncidentResource, ResolveIncidentResponse } from './resolve-inci
 import { Incident } from '../domain/model/incident.entity';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
 
-const resolveIncidentApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderResolveIncidentEndpointPath}`;
+const resolveIncidentApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendIncidentsEndpointPath}`;
 
 /**
  * Encapsulates incident resolution HTTP operations.

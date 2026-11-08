@@ -18,95 +18,156 @@
 
   </div>
 
-  <table mat-table [dataSource]="store.vehicles()">
+  @if (store.error(); as errorKey) {
+    <div class="state state-error" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <span>{{ errorKey | translate }}</span>
+      <button mat-stroked-button type="button" (click)="store.load()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'fleet.states.retry' | translate }}
+      </button>
+    </div>
+  } @else if (store.loading() && !store.loaded()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40"
+        [attr.aria-label]="'fleet.states.loading' | translate"
+      />
+    </div>
+  } @else {
 
-    <ng-container matColumnDef="plate">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.vehicles.plate' | translate }}
-      </th>
+    <div class="filters">
 
-      <td mat-cell *matCellDef="let vehicle">
-        {{ vehicle.plate }}
-      </td>
-    </ng-container>
+      <mat-form-field appearance="outline" class="search">
+        <mat-label>{{ 'fleet.vehicles.search' | translate }}</mat-label>
+        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+        <input matInput type="search" [value]="search()" (input)="onSearch($event)" />
+      </mat-form-field>
 
-    <ng-container matColumnDef="brand">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.vehicles.brand' | translate }}
-      </th>
+      <mat-form-field appearance="outline" class="status">
+        <mat-label>{{ 'fleet.vehicles.status' | translate }}</mat-label>
+        <mat-select [value]="statusFilter()" (selectionChange)="onStatusFilter($event.value)">
+          <mat-option value="ALL">{{ 'fleet.vehicles.allStatuses' | translate }}</mat-option>
+          @for (status of statuses; track status) {
+            <mat-option [value]="status">{{ 'fleet.status.' + status | translate }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
 
-      <td mat-cell *matCellDef="let vehicle">
-        {{ vehicle.brand }}
-      </td>
-    </ng-container>
+    </div>
 
-    <ng-container matColumnDef="model">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.vehicles.model' | translate }}
-      </th>
+    @if (store.vehicleCount() === 0) {
+      <p class="empty">{{ 'fleet.vehicles.empty' | translate }}</p>
+    } @else if (filteredVehicles().length === 0) {
+      <p class="empty" role="status">{{ 'fleet.vehicles.noResults' | translate }}</p>
+    } @else {
 
-      <td mat-cell *matCellDef="let vehicle">
-        {{ vehicle.model }}
-      </td>
-    </ng-container>
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="pageVehicles()">
 
-    <ng-container matColumnDef="year">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.vehicles.year' | translate }}
-      </th>
+          <ng-container matColumnDef="plate">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.vehicles.plate' | translate }}
+            </th>
 
-      <td mat-cell *matCellDef="let vehicle">
-        {{ vehicle.year }}
-      </td>
-    </ng-container>
+            <td mat-cell *matCellDef="let vehicle" class="plate">
+              {{ vehicle.plate }}
+            </td>
+          </ng-container>
 
-    <ng-container matColumnDef="type">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.vehicles.type' | translate }}
-      </th>
+          <ng-container matColumnDef="brand">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.vehicles.brand' | translate }}
+            </th>
 
-      <td mat-cell *matCellDef="let vehicle">
-        {{
-          ('fleet.vehicleTypes.' + vehicle.type)
-            | translate
-        }}
-      </td>
-    </ng-container>
+            <td mat-cell *matCellDef="let vehicle">
+              {{ vehicle.brand }}
+            </td>
+          </ng-container>
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.vehicles.status' | translate }}
-      </th>
+          <ng-container matColumnDef="model">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.vehicles.model' | translate }}
+            </th>
 
-      <td mat-cell *matCellDef="let vehicle">
-        {{
-          ('fleet.status.' + vehicle.currentStatus)
-            | translate
-        }}
-      </td>
-    </ng-container>
+            <td mat-cell *matCellDef="let vehicle">
+              {{ vehicle.model }}
+            </td>
+          </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ 'fleet.actions.title' | translate }}
-      </th>
+          <ng-container matColumnDef="year">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.vehicles.year' | translate }}
+            </th>
 
-      <td mat-cell *matCellDef="let vehicle">
+            <td mat-cell *matCellDef="let vehicle">
+              {{ vehicle.year }}
+            </td>
+          </ng-container>
 
-        <a mat-button [routerLink]="['/fleet/vehicles',vehicle.id]">
-          {{ 'fleet.actions.view' | translate }}
-        </a>
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.vehicles.type' | translate }}
+            </th>
 
-        <a mat-button [routerLink]="['/fleet/vehicles',vehicle.id,'edit']">
-          {{ 'fleet.actions.edit' | translate }}
-        </a>
+            <td mat-cell *matCellDef="let vehicle">
+              {{
+                ('fleet.vehicleTypes.' + vehicle.type)
+                  | translate
+              }}
+            </td>
+          </ng-container>
 
-      </td>
-    </ng-container>
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.vehicles.status' | translate }}
+            </th>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <td mat-cell *matCellDef="let vehicle">
+              <app-vehicle-status-badge [status]="vehicle.currentStatus" />
+            </td>
+          </ng-container>
 
-    <tr mat-row *matRowDef="let row;columns: displayedColumns"></tr>
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ 'fleet.actions.title' | translate }}
+            </th>
 
-  </table>
+            <td mat-cell *matCellDef="let vehicle">
+
+              <a
+                mat-button
+                [routerLink]="['/fleet/vehicles', vehicle.id]"
+                [attr.aria-label]="('fleet.actions.view' | translate) + ' ' + vehicle.plate">
+                {{ 'fleet.actions.view' | translate }}
+              </a>
+
+              <a
+                mat-button
+                [routerLink]="['/fleet/vehicles', vehicle.id, 'edit']"
+                [attr.aria-label]="('fleet.actions.edit' | translate) + ' ' + vehicle.plate">
+                {{ 'fleet.actions.edit' | translate }}
+              </a>
+
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        </table>
+      </div>
+
+      <mat-paginator
+        [length]="filteredVehicles().length"
+        [pageIndex]="pageIndex()"
+        [pageSize]="pageSize()"
+        [pageSizeOptions]="pageSizeOptions"
+        (page)="onPage($event)"
+        showFirstLastButtons />
+
+    }
+  }
 </div>

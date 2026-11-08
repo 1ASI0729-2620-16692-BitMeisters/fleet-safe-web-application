@@ -1,1 +1,254 @@
-<p>vehicle-detail works!</p>
+<section class="detail" aria-labelledby="vehicle-detail-title">
+
+  <header class="heading">
+    <a
+      mat-icon-button
+      routerLink="/fleet/vehicles"
+      [attr.aria-label]="'fleet.actions.back' | translate">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+
+    <h1 id="vehicle-detail-title">{{ 'fleet.vehicles.detailTitle' | translate }}</h1>
+  </header>
+
+  @if (store.error(); as errorKey) {
+    <div class="state state-error" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <span>{{ errorKey | translate }}</span>
+      <button mat-stroked-button type="button" (click)="store.load()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'fleet.states.retry' | translate }}
+      </button>
+    </div>
+  } @else if (!store.loaded()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40"
+        [attr.aria-label]="'fleet.states.loading' | translate"
+      />
+    </div>
+  } @else if (vehicle(); as current) {
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <div mat-card-avatar class="avatar" aria-hidden="true">
+          <mat-icon>local_shipping</mat-icon>
+        </div>
+        <mat-card-title class="plate">{{ current.plate }}</mat-card-title>
+        <mat-card-subtitle>{{ current.brand }} {{ current.model }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <dl class="facts">
+          <div class="fact">
+            <dt>{{ 'fleet.vehicles.status' | translate }}</dt>
+            <dd><app-vehicle-status-badge [status]="current.currentStatus" /></dd>
+          </div>
+
+          <div class="fact">
+            <dt>{{ 'fleet.vehicles.fleet' | translate }}</dt>
+            <dd>
+              {{ fleet()?.name }}
+              @if (company(); as owner) {
+                <span class="muted">{{ owner.name }}</span>
+              }
+            </dd>
+          </div>
+
+          <div class="fact">
+            <dt>{{ 'fleet.vehicles.type' | translate }}</dt>
+            <dd>{{ 'fleet.vehicleTypes.' + current.type | translate }}</dd>
+          </div>
+
+          <div class="fact">
+            <dt>{{ 'fleet.vehicles.year' | translate }}</dt>
+            <dd>{{ current.year }}</dd>
+          </div>
+
+          <div class="fact">
+            <dt>{{ 'fleet.vehicles.capacity' | translate }}</dt>
+            <dd>{{ current.capacity | number }}</dd>
+          </div>
+
+          @if (current.createdAt) {
+            <div class="fact">
+              <dt>{{ 'fleet.vehicles.registeredOn' | translate }}</dt>
+              <dd>{{ current.createdAt | date: 'dd/MM/yyyy' }}</dd>
+            </div>
+          }
+        </dl>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <a mat-flat-button [routerLink]="['/fleet/vehicles', current.id, 'edit']">
+          <mat-icon>edit</mat-icon>
+          {{ 'fleet.actions.edit' | translate }}
+        </a>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ 'fleet.vehicles.currentAssignment' | translate }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (activeAssignment(); as assignment) {
+          <p class="assignment">
+            <mat-icon aria-hidden="true">badge</mat-icon>
+            <span>
+              {{ 'fleet.assignments.activeDriver' | translate }}:
+              <strong>{{ activeDriver()?.licenseNumber ?? ('fleet.assignments.unknownDriver' | translate) }}</strong>
+            </span>
+            <span class="muted">
+              {{ 'fleet.assignments.assignedFrom' | translate }}
+              {{ assignment.assignedFrom | date: 'dd/MM/yyyy' }}
+            </span>
+          </p>
+        } @else {
+          <p class="assignment">
+            <mat-icon aria-hidden="true">no_accounts</mat-icon>
+            <span>{{ 'fleet.assignments.none' | translate }}</span>
+          </p>
+        }
+      </mat-card-content>
+
+      @if (!activeAssignment()) {
+        <mat-card-actions>
+          <a
+            mat-stroked-button
+            routerLink="/fleet/assignments"
+            [queryParams]="{ vehicleId: current.id }">
+            {{ 'fleet.vehicles.assign' | translate }}
+          </a>
+        </mat-card-actions>
+      }
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ 'fleet.vehicles.inspectionHistory' | translate }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (store.inspectionsError(); as errorKey) {
+          <div class="state state-error" role="alert">
+            <mat-icon aria-hidden="true">error</mat-icon>
+            <span>{{ errorKey | translate }}</span>
+            <button mat-stroked-button type="button" (click)="store.loadVehicleInspections(current.id)">
+              {{ 'fleet.states.retry' | translate }}
+            </button>
+          </div>
+        } @else if (!inspectionsRequested()) {
+          <div class="state" role="status" aria-live="polite">
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="32"
+              [attr.aria-label]="'fleet.states.loading' | translate"
+            />
+          </div>
+        } @else if (inspections().length === 0) {
+          <p class="empty" role="status">{{ 'fleet.vehicles.noInspections' | translate }}</p>
+        } @else {
+          <div class="table-wrapper">
+            <table mat-table [dataSource]="inspections()">
+
+              <ng-container matColumnDef="startedAt">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.vehicles.inspectionDate' | translate }}</th>
+                <td mat-cell *matCellDef="let inspection">
+                  {{ inspection.startedAt | date: 'dd/MM/yyyy HH:mm' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.vehicles.inspectionStatus' | translate }}</th>
+                <td mat-cell *matCellDef="let inspection">
+                  {{ 'fleet.inspectionStatus.' + inspection.status | translate }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="odometer">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.vehicles.odometer' | translate }}</th>
+                <td mat-cell *matCellDef="let inspection">{{ inspection.odometer | number }} km</td>
+              </ng-container>
+
+              <ng-container matColumnDef="driver">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.assignments.driver' | translate }}</th>
+                <td mat-cell *matCellDef="let inspection">
+                  {{ driverLicense(inspection.driverId) || ('fleet.assignments.unknownDriver' | translate) }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="inspectionColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: inspectionColumns"></tr>
+
+            </table>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{ 'fleet.vehicles.assignmentHistory' | translate }}</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (assignmentHistory().length === 0) {
+          <p class="empty">{{ 'fleet.vehicles.noAssignmentHistory' | translate }}</p>
+        } @else {
+          <div class="table-wrapper">
+            <table mat-table [dataSource]="assignmentHistory()">
+
+              <ng-container matColumnDef="driver">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.assignments.driver' | translate }}</th>
+                <td mat-cell *matCellDef="let assignment">
+                  {{ driverLicense(assignment.driverId) || ('fleet.assignments.unknownDriver' | translate) }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assignedFrom">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.assignments.assignedFrom' | translate }}</th>
+                <td mat-cell *matCellDef="let assignment">
+                  {{ assignment.assignedFrom | date: 'dd/MM/yyyy' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="assignedTo">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.assignments.assignedTo' | translate }}</th>
+                <td mat-cell *matCellDef="let assignment">
+                  @if (assignment.assignedTo) {
+                    {{ assignment.assignedTo | date: 'dd/MM/yyyy' }}
+                  } @else {
+                    —
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="state">
+                <th mat-header-cell *matHeaderCellDef>{{ 'fleet.assignments.state' | translate }}</th>
+                <td mat-cell *matCellDef="let assignment">
+                  {{ (isCurrent(assignment.id) ? 'fleet.assignments.active' : 'fleet.assignments.ended') | translate }}
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="assignmentColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: assignmentColumns"></tr>
+
+            </table>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  } @else {
+    <div class="state" role="alert">
+      <mat-icon aria-hidden="true">search_off</mat-icon>
+      <span>{{ 'fleet.vehicles.notFound' | translate }}</span>
+      <a mat-stroked-button routerLink="/fleet/vehicles">
+        {{ 'fleet.actions.back' | translate }}
+      </a>
+    </div>
+  }
+</section>

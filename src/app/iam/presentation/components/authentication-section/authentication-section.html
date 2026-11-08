@@ -1,0 +1,11 @@
+@if (store.currentUser(); as user) {
+  <div class="authentication">
+    <div class="authentication__user">
+      <span class="authentication__name">{{ user.fullName }}</span>
+      <span class="authentication__role">{{ 'iam.roles.' + user.role | translate }}</span>
+    </div>
+    <button mat-icon-button type="button" (click)="performSignOut()" [attr.aria-label]="'iam.signOut' | translate">
+      <mat-icon>logout</mat-icon>
+    </button>
+  </div>
+}

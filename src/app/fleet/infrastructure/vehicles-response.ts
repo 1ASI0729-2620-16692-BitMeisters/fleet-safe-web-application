@@ -1,5 +1,6 @@
 import { BaseResource, BaseResponse } from '../../shared/infrastructure/base-response';
-import { VehicleStatus, VehicleType } from '../domain/model/vehicle.entity';
+import { VehicleStatus } from '../domain/model/vehicle-status.enum';
+import { VehicleType } from '../domain/model/vehicle-type.enum';
 
 export interface VehicleResource extends BaseResource {
   fleetId: string;

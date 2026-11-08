@@ -1,0 +1,28 @@
+.authentication {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.authentication__user {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.authentication__name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.authentication__role {
+  font-size: 12px;
+  opacity: 0.75;
+}
+
+@media (max-width: 640px) {
+  .authentication__user {
+    display: none;
+  }
+}

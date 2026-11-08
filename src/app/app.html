@@ -1,1 +1,5 @@
-<app-layout/>
+@if (iamStore.isSignedIn()) {
+  <app-layout/>
+} @else {
+  <router-outlet/>
+}

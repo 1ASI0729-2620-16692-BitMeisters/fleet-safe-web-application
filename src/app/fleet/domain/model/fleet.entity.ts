@@ -1,6 +1,6 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
-import { Vehicle } from './vehicle.entity';
-import { VehicleStatus } from './vehicle.entity';
+import type { Vehicle } from './vehicle.entity';
+import { VehicleStatus } from './vehicle-status.enum';
 
 export class Fleet implements BaseEntity {
   #id: string;
@@ -61,6 +61,10 @@ export class Fleet implements BaseEntity {
 
   getVehicles(): string[] {
     return [...this.#vehicleIds];
+  }
+
+  countVehicles(vehicles: readonly Vehicle[]): number {
+    return vehicles.filter((vehicle) => vehicle.fleetId === this.#id).length;
   }
 
   countByStatus(vehicles: readonly Vehicle[], status: VehicleStatus): number {

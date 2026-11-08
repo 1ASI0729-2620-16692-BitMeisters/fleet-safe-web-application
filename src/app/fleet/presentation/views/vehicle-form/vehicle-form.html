@@ -1,1 +1,158 @@
-<p>vehicle-form works!</p>
+<section class="vehicle-form" aria-labelledby="vehicle-form-title">
+
+  <header class="heading">
+    <a
+      mat-icon-button
+      routerLink="/fleet/vehicles"
+      [attr.aria-label]="'fleet.actions.back' | translate">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+
+    <h1 id="vehicle-form-title">
+      {{ (isEdit() ? 'fleet.vehicles.editTitle' : 'fleet.vehicles.newTitle') | translate }}
+    </h1>
+  </header>
+
+  @if (store.error(); as errorKey) {
+    <div class="state state-error" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <span>{{ errorKey | translate }}</span>
+      <button mat-stroked-button type="button" (click)="store.load()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'fleet.states.retry' | translate }}
+      </button>
+    </div>
+  } @else if (!store.loaded()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40"
+        [attr.aria-label]="'fleet.states.loading' | translate"
+      />
+    </div>
+  } @else if (notFound()) {
+    <div class="state" role="alert">
+      <mat-icon aria-hidden="true">search_off</mat-icon>
+      <span>{{ 'fleet.vehicles.notFound' | translate }}</span>
+      <a mat-stroked-button routerLink="/fleet/vehicles">
+        {{ 'fleet.actions.back' | translate }}
+      </a>
+    </div>
+  } @else {
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'fleet.vehicles.fleet' | translate }}</mat-label>
+        <mat-select formControlName="fleetId" required>
+          @for (fleet of store.fleets(); track fleet.id) {
+            <mat-option [value]="fleet.id">{{ fleet.name }}</mat-option>
+          }
+        </mat-select>
+        @if (isEdit()) {
+          <mat-hint>{{ 'fleet.vehicles.fleetReadOnly' | translate }}</mat-hint>
+        }
+        @if (form.controls.fleetId.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.vehicles.plate' | translate }}</mat-label>
+        <input matInput formControlName="plate" autocomplete="off" maxlength="10" required />
+        <mat-hint>{{ 'fleet.vehicles.plateHint' | translate }}</mat-hint>
+        @if (form.controls.plate.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.plate.hasError('plateFormat')) {
+          <mat-error>{{ 'fleet.validation.plateFormat' | translate }}</mat-error>
+        } @else if (form.controls.plate.hasError('plateTaken')) {
+          <mat-error>{{ 'fleet.validation.plateTaken' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.vehicles.type' | translate }}</mat-label>
+        <mat-select formControlName="type" required>
+          @for (type of vehicleTypes; track type) {
+            <mat-option [value]="type">{{ 'fleet.vehicleTypes.' + type | translate }}</mat-option>
+          }
+        </mat-select>
+        @if (form.controls.type.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.vehicles.brand' | translate }}</mat-label>
+        <input matInput formControlName="brand" autocomplete="off" required />
+        @if (form.controls.brand.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.brand.hasError('maxlength')) {
+          <mat-error>{{ 'fleet.validation.maxLength' | translate: { max: textMaxLength } }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.vehicles.model' | translate }}</mat-label>
+        <input matInput formControlName="model" autocomplete="off" required />
+        @if (form.controls.model.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.model.hasError('maxlength')) {
+          <mat-error>{{ 'fleet.validation.maxLength' | translate: { max: textMaxLength } }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.vehicles.year' | translate }}</mat-label>
+        <input matInput type="number" inputmode="numeric" formControlName="year" required />
+        @if (form.controls.year.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.year.hasError('min') || form.controls.year.hasError('max')) {
+          <mat-error>
+            {{ 'fleet.validation.yearRange' | translate: { min: minYear, max: maxYear } }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.vehicles.capacity' | translate }}</mat-label>
+        <input matInput type="number" inputmode="decimal" step="any" formControlName="capacity" required />
+        @if (form.controls.capacity.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.capacity.hasError('min')) {
+          <mat-error>{{ 'fleet.validation.positive' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (vehicle(); as current) {
+        <div class="status-readonly full-width">
+          <span class="label">{{ 'fleet.vehicles.status' | translate }}</span>
+          <app-vehicle-status-badge [status]="current.currentStatus" />
+          <span class="hint">{{ 'fleet.vehicles.statusReadOnly' | translate }}</span>
+        </div>
+      }
+
+      @if (store.actionError(); as errorKey) {
+        <p class="form-error full-width" role="alert">
+          <mat-icon aria-hidden="true">error</mat-icon>
+          {{ errorKey | translate }}
+        </p>
+      }
+
+      <div class="actions full-width">
+        <a mat-stroked-button routerLink="/fleet/vehicles">
+          {{ 'fleet.actions.cancel' | translate }}
+        </a>
+
+        <button mat-flat-button type="submit" [disabled]="store.saving()">
+          {{
+            (store.saving()
+              ? 'fleet.vehicles.saving'
+              : isEdit() ? 'fleet.vehicles.update' : 'fleet.vehicles.create') | translate
+          }}
+        </button>
+      </div>
+
+    </form>
+  }
+</section>

@@ -343,3 +343,11 @@
     transition: none;
   }
 }
+
+.item-hint-done {
+  color: #16724b;
+}
+
+.finding-button {
+  margin-top: 8px;
+}

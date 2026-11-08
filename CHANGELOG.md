@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-11-08
+
+### Added
+- Sign-in with the platform account, protected routes, the signed-in user in the top bar and sign-out.
+- The administrator lists, opens and changes the accounts of the company.
+- The documents of each vehicle, the inspection checklist with the observations and photos of each finding, the review of the inspection and the resulting condition of the vehicle, all through the platform backend.
+- The vehicles of the fleet by operational status.
+- The company, its fleets and vehicles, and the incidents with their corrective actions, repairs and follow-ups, through the platform backend.
+- The vehicle form, detail, list filters and the assignment form with its history.
+
+### Fixed
+- The application is served from the path of the renamed repository.
+
 ## [0.3.0] - 2026-10-26
 
 ### Added
@@ -85,15 +98,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shared layout with sidebar, language switcher and footer.
 - Environments per stage and the json-server mock api.
 
-[0.3.0]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.9...v0.3.0
-[0.2.9]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.8...v0.2.9
-[0.2.8]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.7...v0.2.8
-[0.2.7]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.6...v0.2.7
-[0.2.6]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.5...v0.2.6
-[0.2.5]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.4...v0.2.5
-[0.2.4]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.3...v0.2.4
-[0.2.3]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.2...v0.2.3
-[0.2.2]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.1...v0.2.2
-[0.2.1]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.2.0...v0.2.1
-[0.2.0]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/1ASI0729-2620-16692-BitMeisters/Frontend-Web-Application/releases/tag/v0.1.0
+[0.3.0]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.9...v0.3.0
+[0.2.9]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.8...v0.2.9
+[0.2.8]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.7...v0.2.8
+[0.2.7]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.6...v0.2.7
+[0.2.6]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.5...v0.2.6
+[0.2.5]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.4...v0.2.5
+[0.2.4]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.3...v0.2.4
+[0.2.3]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.2...v0.2.3
+[0.2.2]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.1...v0.2.2
+[0.2.1]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/1ASI0729-2620-16692-BitMeisters/fleet-safe-web-application/releases/tag/v0.1.0

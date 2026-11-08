@@ -9,12 +9,14 @@ import { Fleet } from '../domain/model/fleet.entity';
 import { Vehicle } from '../domain/model/vehicle.entity';
 import { Driver } from '../domain/model/driver.entity';
 import { VehicleAssignment } from '../domain/model/vehicle-assignment.entity';
+import { VehicleInspectionSummary } from '../domain/model/vehicle-inspection-summary.entity';
 
 import { CompaniesApiEndpoint } from './companies-api-endpoint';
 import { FleetsApiEndpoint } from './fleets-api-endpoint';
 import { VehiclesApiEndpoint } from './vehicles-api-endpoint';
 import { DriversApiEndpoint } from './drivers-api-endpoint';
 import { VehicleAssignmentsApiEndpoint } from './vehicle-assignments-api-endpoint';
+import { VehicleInspectionsApiEndpoint } from './vehicle-inspections-api-endpoint';
 
 @Injectable({
   providedIn: 'root',
@@ -27,9 +29,10 @@ export class FleetApi extends BaseApi {
   private readonly vehiclesEndpoint = new VehiclesApiEndpoint(this.http);
   private readonly driversEndpoint = new DriversApiEndpoint(this.http);
   private readonly assignmentsEndpoint = new VehicleAssignmentsApiEndpoint(this.http);
+  private readonly vehicleInspectionsEndpoint = new VehicleInspectionsApiEndpoint(this.http);
 
   getCompanies(): Observable<Company[]> {
-    return this.companiesEndpoint.getAll();
+    return this.companiesEndpoint.getMine();
   }
 
   getFleets(): Observable<Fleet[]> {
@@ -62,6 +65,14 @@ export class FleetApi extends BaseApi {
 
   createVehicleAssignment(assignment: VehicleAssignment): Observable<VehicleAssignment> {
     return this.assignmentsEndpoint.create(assignment);
+  }
+
+  updateVehicleAssignment(assignment: VehicleAssignment): Observable<VehicleAssignment> {
+    return this.assignmentsEndpoint.update(assignment, assignment.id);
+  }
+
+  getVehicleInspections(vehicleId: string): Observable<VehicleInspectionSummary[]> {
+    return this.vehicleInspectionsEndpoint.getByVehicleId(vehicleId);
   }
 
   deleteVehicle(id: string): Observable<void> {

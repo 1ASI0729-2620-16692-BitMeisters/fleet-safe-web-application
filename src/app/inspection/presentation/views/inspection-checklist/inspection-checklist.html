@@ -135,15 +135,25 @@
                         <span class="item-description">{{ item.description }}</span>
                       }
                       @if (isFinding(item)) {
-                        <p class="item-hint">
-                          <mat-icon aria-hidden="true">edit_note</mat-icon>
-                          {{
-                            (item.requiresEvidence
-                              ? 'inspection.checklist.obsEvidenceRequired'
-                              : 'inspection.checklist.observationRequired'
-                            ) | translate
-                          }}
-                        </p>
+                        @if (observationOf(item); as observation) {
+                          <p class="item-hint item-hint-done">
+                            <mat-icon aria-hidden="true">task_alt</mat-icon>
+                            {{ 'inspection.checklist.observationSaved' | translate: { count: observation.evidences.length } }}
+                          </p>
+                        } @else {
+                          <p class="item-hint">
+                            <mat-icon aria-hidden="true">edit_note</mat-icon>
+                            {{
+                              (item.requiresEvidence
+                                ? 'inspection.checklist.obsEvidenceRequired'
+                                : 'inspection.checklist.observationRequired'
+                              ) | translate
+                            }}
+                          </p>
+                        }
+                        <button mat-stroked-button type="button" class="finding-button" (click)="openFinding(item)">
+                          {{ (observationOf(item) ? 'inspection.checklist.addPhotos' : 'inspection.checklist.addObservation') | translate }}
+                        </button>
                       }
                     </div>
                     <app-result-selector

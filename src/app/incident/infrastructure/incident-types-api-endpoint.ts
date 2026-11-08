@@ -5,7 +5,7 @@ import { IncidentTypeAssembler } from './incident-type-assembler';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
-const incidentTypesApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderIncidentTypesEndpointPath}`;
+const incidentTypesApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendIncidentTypesEndpointPath}`;
 
 /**
  * Endpoint client for incident type CRUD operations.

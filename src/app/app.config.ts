@@ -4,6 +4,7 @@ import { TitleStrategy, provideRouter } from '@angular/router';
 import { provideTranslateService } from '@ngx-translate/core';
 import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 import { routes } from './app.routes';
+import { iamInterceptor } from './iam/infrastructure/iam.interceptor';
 import { Notifier } from './shared/application/notifier';
 import { readLanguagePreference } from './shared/infrastructure/i18n/language-preference';
 import { languageInterceptor } from './shared/infrastructure/http/language.interceptor';
@@ -14,7 +15,7 @@ import { SnackBarNotifier } from './shared/presentation/notifications/snack-bar-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withInterceptors([languageInterceptor])),
+    provideHttpClient(withInterceptors([languageInterceptor, iamInterceptor])),
     provideTranslateService({
       loader: provideTranslateHttpLoader({
         prefix: './i18n/',

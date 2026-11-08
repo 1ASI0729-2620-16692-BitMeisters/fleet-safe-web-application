@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { localDate } from './local-date';
 
 export class VehicleAssignment implements BaseEntity {
   #id: string;
@@ -25,6 +26,19 @@ export class VehicleAssignment implements BaseEntity {
     this.#assignedTo = props.assignedTo ?? null;
     this.#isActive = props.isActive;
     this.#createdAt = props.createdAt;
+  }
+
+  /**
+   * Starts an assignment that is in force from the given day until it is closed.
+   */
+  static start(props: {
+    id: string;
+    vehicleId: string;
+    driverId: string;
+    assignedFrom: string;
+    createdAt: string;
+  }): VehicleAssignment {
+    return new VehicleAssignment({ ...props, assignedTo: null, isActive: true });
   }
 
   get id(): string {
@@ -55,8 +69,13 @@ export class VehicleAssignment implements BaseEntity {
     return this.#createdAt;
   }
 
+  /**
+   * Answers whether the assignment is in force on the local day of the given date.
+   *
+   * @param date - Moment to check.
+   */
   isActiveOn(date: Date): boolean {
-    const currentDate = date.toISOString().slice(0, 10);
+    const currentDate = localDate(date);
 
     return (
       this.#isActive &&
@@ -68,5 +87,20 @@ export class VehicleAssignment implements BaseEntity {
   close(endDate: string): void {
     this.#assignedTo = endDate;
     this.#isActive = false;
+  }
+
+  /**
+   * Duplicates the assignment so it can be closed without altering the one held by the store.
+   */
+  copy(): VehicleAssignment {
+    return new VehicleAssignment({
+      id: this.#id,
+      vehicleId: this.#vehicleId,
+      driverId: this.#driverId,
+      assignedFrom: this.#assignedFrom,
+      assignedTo: this.#assignedTo,
+      isActive: this.#isActive,
+      createdAt: this.#createdAt,
+    });
   }
 }

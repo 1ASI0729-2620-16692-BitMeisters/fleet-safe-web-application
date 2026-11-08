@@ -1,1 +1,102 @@
-<p>driver-list works!</p>
+<div class="page">
+
+  <div class="page-header">
+    <h1>{{ 'fleet.drivers.title' | translate }}</h1>
+
+    <p>{{ 'fleet.drivers.subtitle' | translate }}</p>
+  </div>
+
+  @if (store.error(); as errorKey) {
+    <div class="state state-error" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <span>{{ errorKey | translate }}</span>
+      <button mat-stroked-button type="button" (click)="store.load()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'fleet.states.retry' | translate }}
+      </button>
+    </div>
+  } @else if (!store.loaded()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40"
+        [attr.aria-label]="'fleet.states.loading' | translate"
+      />
+    </div>
+  } @else if (rows().length === 0) {
+    <p class="empty">{{ 'fleet.drivers.empty' | translate }}</p>
+  } @else {
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="rows()">
+
+        <ng-container matColumnDef="licenseNumber">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'fleet.drivers.licenseNumber' | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row" class="license">
+            {{ row.driver.licenseNumber }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="licenseExpirationDate">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'fleet.drivers.licenseExpirationDate' | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row">
+            {{ row.driver.licenseExpirationDate | date: 'dd/MM/yyyy' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="licenseStatus">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'fleet.drivers.licenseStatus' | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row">
+            @if (row.hasValidLicense) {
+              <span class="badge badge-valid">{{ 'fleet.drivers.valid' | translate }}</span>
+            } @else {
+              <span class="badge badge-expired">{{ 'fleet.drivers.expired' | translate }}</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assignedVehicle">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'fleet.drivers.assignedVehicle' | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row">
+            @if (row.vehicle) {
+              <strong>{{ row.vehicle.plate }}</strong>
+              <span class="muted">{{ row.vehicle.brand }} {{ row.vehicle.model }}</span>
+            } @else if (row.hasAssignment) {
+              {{ 'fleet.assignments.unknownVehicle' | translate }}
+            } @else {
+              <span class="muted">{{ 'fleet.drivers.noVehicle' | translate }}</span>
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="userId">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ 'fleet.drivers.userId' | translate }}
+          </th>
+
+          <td mat-cell *matCellDef="let row" class="muted">
+            {{ row.driver.userId }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      </table>
+    </div>
+
+  }
+</div>

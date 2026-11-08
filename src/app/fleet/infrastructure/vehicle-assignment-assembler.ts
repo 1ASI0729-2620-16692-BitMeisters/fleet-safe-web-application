@@ -22,7 +22,7 @@ export class VehicleAssignmentAssembler implements BaseAssembler<
       assignedFrom: entity.assignedFrom,
       assignedTo: entity.assignedTo,
       isActive: entity.isActive,
-      createdAt: entity.createdAt
+      createdAt: entity.createdAt,
     };
   }
 

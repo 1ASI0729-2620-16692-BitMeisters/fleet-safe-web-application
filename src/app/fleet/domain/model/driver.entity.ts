@@ -1,4 +1,5 @@
 import { BaseEntity } from '../../../shared/domain/model/base-entity';
+import { localDate } from './local-date';
 import type { VehicleAssignment } from './vehicle-assignment.entity';
 
 export class Driver implements BaseEntity {
@@ -49,14 +50,22 @@ export class Driver implements BaseEntity {
     return this.#updatedAt;
   }
 
-  hasValidLicense(referenceDate: string = new Date().toISOString().slice(0, 10)): boolean {
+  /**
+   * Answers whether the license is still in force on the given day, the expiration day included.
+   *
+   * @param referenceDate - Day to check as `yyyy-MM-dd`; defaults to the local day.
+   */
+  hasValidLicense(referenceDate: string = localDate()): boolean {
     return this.#licenseExpirationDate >= referenceDate;
   }
 
-  getActiveAssignment(assignments: readonly VehicleAssignment[]): VehicleAssignment | null {
+  getActiveAssignment(
+    assignments: readonly VehicleAssignment[],
+    date: Date = new Date(),
+  ): VehicleAssignment | null {
     return (
       assignments.find(
-        (assignment) => assignment.driverId === this.#id && assignment.isActiveOn(new Date()),
+        (assignment) => assignment.driverId === this.#id && assignment.isActiveOn(date),
       ) ?? null
     );
   }

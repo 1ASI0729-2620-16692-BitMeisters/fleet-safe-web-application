@@ -107,7 +107,10 @@
       "answerAllToContinue": "Answer every item to continue.",
       "overall": "{{answered}} of {{total}} items answered",
       "safety": "Safety",
-      "photo": "Photo if it fails"
+      "photo": "Photo if it fails",
+      "observationSaved": "Observation saved · {{count}} photos",
+      "addObservation": "Add observation",
+      "addPhotos": "Add photos"
     },
     "dialog": {
       "observationLabel": "Observation",
@@ -115,7 +118,11 @@
       "evidenceLabel": "Evidence",
       "requiredOnThisItem": "required on this item",
       "photoRequiredError": "At least one photograph is required for this safety component.",
-      "saveAndContinue": "Save and continue"
+      "saveAndContinue": "Save and continue",
+      "addPhoto": "Add photo",
+      "removePhoto": "Remove photo",
+      "photoFormatError": "Only JPEG or PNG photos are accepted.",
+      "cancel": "Cancel"
     },
     "summary": {
       "title": "Summary",
@@ -124,7 +131,8 @@
       "observed": "Observed",
       "failed": "Failed",
       "evaluationNotice": "On submit, the system evaluates the vehicle against your company rules.",
-      "submitInspection": "Submit inspection"
+      "submitInspection": "Submit inspection",
+      "pendingFindings": "{{count}} findings still need their observation or photo."
     },
     "resultScreen": {
       "title": "Result",
@@ -133,7 +141,23 @@
       "notEnabledInstruction": "The incident was registered and your supervisor has been notified. Do not start the operation until you receive instructions.",
       "observedInstruction": "The vehicle is authorized to operate with findings recorded for preventive follow-up.",
       "enabledInstruction": "The vehicle is fully authorized to operate.",
-      "backToStart": "Back to start"
+      "backToStart": "Back to start",
+      "status": {
+        "ENABLED": "Enabled",
+        "OBSERVED": "Observed",
+        "NOT_ENABLED": "Not Enabled"
+      },
+      "text": {
+        "ENABLED": "Vehicle {{plate}} can operate.",
+        "OBSERVED": "Vehicle {{plate}} can operate with findings.",
+        "NOT_ENABLED": "Vehicle {{plate}} does not meet the conditions to operate."
+      },
+      "instruction": {
+        "ENABLED": "The vehicle is fully authorized to operate.",
+        "OBSERVED": "The vehicle is authorized to operate with findings recorded for preventive follow-up.",
+        "NOT_ENABLED": "The incident was registered and your supervisor has been notified. Do not start the operation until you receive instructions."
+      },
+      "evaluating": "Evaluating the vehicle…"
     },
     "history": {
       "title": "Inspection history",
@@ -293,9 +317,26 @@
   "fleet": {
     "title": "Fleet Management",
     "subtitle": "Manage fleets, vehicles, drivers and assignments.",
+    "titles": {
+      "vehicles": "Vehicles",
+      "newVehicle": "Register vehicle",
+      "editVehicle": "Update vehicle",
+      "vehicleDetail": "Vehicle details",
+      "drivers": "Drivers",
+      "assignments": "Vehicle assignments"
+    },
+    "states": {
+      "loading": "Loading…",
+      "retry": "Retry"
+    },
     "fleets": {
       "title": "Fleets",
-      "count": "Total fleets"
+      "count": "Total fleets",
+      "overview": "Fleet overview",
+      "name": "Fleet",
+      "company": "Company",
+      "vehicles": "Vehicles",
+      "empty": "No fleets are registered yet."
     },
     "vehicles": {
       "title": "Vehicles",
@@ -307,29 +348,85 @@
       "notFound": "Vehicle not found.",
       "fleet": "Fleet",
       "plate": "Plate",
+      "plateHint": "Format ABC-123",
       "brand": "Brand",
       "model": "Model",
       "year": "Year",
       "type": "Type",
       "capacity": "Capacity",
-      "status": "Status"
+      "status": "Status",
+      "search": "Search by plate, brand or model",
+      "allStatuses": "All statuses",
+      "empty": "No vehicles are registered yet.",
+      "noResults": "No vehicles match the selected filters.",
+      "fleetReadOnly": "A vehicle stays in the fleet where it was registered.",
+      "statusReadOnly": "The status comes from the latest evaluation and cannot be edited here.",
+      "create": "Register vehicle",
+      "update": "Save changes",
+      "saving": "Saving…",
+      "information": "Vehicle information",
+      "registeredOn": "Registered on",
+      "currentAssignment": "Current assignment",
+      "assignmentHistory": "Assignment history",
+      "noAssignmentHistory": "This vehicle has never been assigned to a driver.",
+      "inspectionHistory": "Inspection history",
+      "noInspections": "No inspections have been registered for this vehicle.",
+      "inspectionDate": "Started",
+      "inspectionStatus": "Inspection status",
+      "odometer": "Odometer",
+      "assign": "Assign to a driver"
+    },
+    "validation": {
+      "required": "This field is required.",
+      "plateFormat": "Use the format ABC-123.",
+      "plateTaken": "This plate is already registered.",
+      "yearRange": "Enter a year between {{min}} and {{max}}.",
+      "positive": "Enter a value greater than 0.",
+      "maxLength": "Use at most {{max}} characters."
     },
     "drivers": {
       "title": "Drivers",
+      "subtitle": "Drivers of the fleet and the vehicle each one operates.",
+      "userId": "User",
       "licenseNumber": "License number",
       "licenseExpirationDate": "Expiration date",
       "licenseStatus": "License status",
       "valid": "Valid",
-      "expired": "Expired"
+      "expired": "Expired",
+      "assignedVehicle": "Assigned vehicle",
+      "noVehicle": "No vehicle",
+      "empty": "No drivers are registered yet."
     },
     "assignments": {
       "title": "Vehicle assignments",
+      "subtitle": "Assign vehicles to drivers and review the assignment history.",
+      "newTitle": "New assignment",
       "vehicle": "Vehicle",
       "driver": "Driver",
       "assignedFrom": "Assigned from",
+      "assignedTo": "Assigned until",
       "activeDriver": "Assigned driver",
       "none": "No active assignment",
-      "assign": "Assign vehicle"
+      "assign": "Assign vehicle",
+      "assigning": "Assigning…",
+      "state": "State",
+      "active": "Active",
+      "ended": "Ended",
+      "end": "End assignment",
+      "history": "Assignment history",
+      "empty": "No assignments have been registered yet.",
+      "selectVehicle": "Select a vehicle",
+      "selectDriver": "Select a driver",
+      "noVehicles": "Every vehicle already has a driver.",
+      "noDrivers": "Every driver already has a vehicle.",
+      "licenseExpired": "license expired",
+      "unknownVehicle": "Unknown vehicle",
+      "unknownDriver": "Unknown driver",
+      "current": "In force"
+    },
+    "inspectionStatus": {
+      "IN_PROGRESS": "In progress",
+      "COMPLETED": "Completed"
     },
     "vehicleTypes": {
       "THIN": "Thin",
@@ -351,6 +448,32 @@
       "viewVehicles": "View vehicles",
       "viewDrivers": "View drivers",
       "manageAssignments": "Manage assignments"
+    },
+    "notifications": {
+      "vehicleRegistered": "Vehicle {{plate}} registered.",
+      "vehicleUpdated": "Vehicle {{plate}} updated.",
+      "vehicleDeleted": "Vehicle removed.",
+      "vehicleAssigned": "Vehicle assigned. The driver can now inspect it.",
+      "assignmentEnded": "Assignment ended."
+    },
+    "errors": {
+      "loadFailed": "Could not load Fleet Management. Check your connection and try again.",
+      "inspectionsFailed": "Could not load the inspection history.",
+      "saveFailed": "Could not complete the request. Check your connection and try again.",
+      "invalidVehicle": "Complete every field with valid values.",
+      "plateTaken": "The plate is already registered.",
+      "fleetNotFound": "The selected fleet does not exist.",
+      "vehicleNotFound": "The vehicle does not exist.",
+      "assignmentNotFound": "The assignment does not exist.",
+      "assignmentNotActive": "The assignment has already ended.",
+      "assignment": {
+        "VEHICLE_NOT_FOUND": "The selected vehicle does not exist.",
+        "DRIVER_NOT_FOUND": "The selected driver does not exist.",
+        "VEHICLE_NOT_ENABLED": "The vehicle is not enabled, so it cannot be assigned to a driver.",
+        "VEHICLE_ALREADY_ASSIGNED": "The vehicle is already assigned to a driver.",
+        "DRIVER_LICENSE_EXPIRED": "The driver's license has expired.",
+        "DRIVER_ALREADY_ASSIGNED": "The driver already has an assigned vehicle."
+      }
     }
   },
   "documents": {
@@ -399,7 +522,13 @@
     "vehicleDocumentation": "Vehicle Documentation",
     "startInspection": "Start inspection",
     "inspectionChecklist": "Inspection checklist",
-    "pageNotFound": "Page not found"
+    "pageNotFound": "Page not found",
+    "signIn": "Sign in",
+    "users": "Users",
+    "newUser": "New user",
+    "vehicleStatusBoard": "Vehicle status",
+    "inspectionSummary": "Inspection summary",
+    "inspectionResult": "Inspection result"
   },
   "paginator": {
     "itemsPerPage": "Items per page:",
@@ -408,5 +537,79 @@
     "firstPage": "First page",
     "lastPage": "Last page",
     "range": "{{start}} – {{end}} of {{length}}"
+  },
+  "iam": {
+    "signIn": {
+      "title": "Sign in to FleetSafe",
+      "subtitle": "Use the account your company administrator gave you.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "signingIn": "Signing in…",
+      "invalidCredentials": "The email or the password is not correct."
+    },
+    "signOut": "Sign out",
+    "roles": {
+      "ADMINISTRATOR": "Administrator",
+      "FLEET_SUPERVISOR": "Fleet supervisor",
+      "DRIVER": "Driver"
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "Accounts of your company, with their role and status.",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "allRoles": "All roles",
+      "allStatuses": "All statuses",
+      "empty": "No users match these filters.",
+      "loading": "Loading users",
+      "retry": "Try again",
+      "new": "New user",
+      "roleOf": "Role of {{name}}",
+      "roleChanged": "The role of {{name}} was changed.",
+      "activated": "{{name}} can sign in again.",
+      "deactivated": "{{name}} can no longer sign in."
+    },
+    "userForm": {
+      "title": "New user",
+      "subtitle": "The person signs in with this email and password, and sees what their role allows.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "passwordHint": "Between 8 and 72 characters.",
+      "role": "Role",
+      "cancel": "Cancel",
+      "save": "Create user",
+      "saving": "Creating…",
+      "created": "The account {{email}} was created.",
+      "duplicateEmail": "There is already an account with this email."
+    }
+  },
+  "evaluation": {
+    "title": "Vehicle status",
+    "subtitle": "Which vehicles can operate today, according to their latest evaluation.",
+    "filter": "Status",
+    "caption": "Current status of each vehicle",
+    "plate": "Plate",
+    "vehicle": "Vehicle",
+    "evaluatedAt": "Last evaluation",
+    "state": "Status",
+    "override": "Block lifted",
+    "loading": "Loading the status of the vehicles…",
+    "empty": "No vehicles with this status.",
+    "error": "The status of the vehicles could not be loaded.",
+    "retry": "Try again",
+    "status": {
+      "ALL": "All",
+      "ENABLED": "Enabled",
+      "OBSERVED": "Observed",
+      "NOT_ENABLED": "Not Enabled",
+      "NOT_INSPECTED": "Not inspected"
+    }
   }
 }

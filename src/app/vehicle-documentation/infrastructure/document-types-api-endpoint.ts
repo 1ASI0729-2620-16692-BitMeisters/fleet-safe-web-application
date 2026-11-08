@@ -5,7 +5,7 @@ import { DocumentType } from '../domain/model/document-type.entity';
 import { DocumentTypeAssembler } from './document-type-assembler';
 import { DocumentTypeResource, DocumentTypesResponse } from './document-types-response';
 
-const documentTypesApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderDocumentTypesEndpointPath}`;
+const documentTypesApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendDocumentTypesEndpointPath}`;
 
 export class DocumentTypesApiEndpoint extends BaseApiEndpoint<
   DocumentType,
