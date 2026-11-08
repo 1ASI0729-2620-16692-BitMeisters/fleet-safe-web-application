@@ -24,7 +24,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - run: npx ng build --base-href /Frontend-Web-Application/
+      - run: npx ng build --base-href /fleet-safe-web-application/
       - run: cp dist/frontend-web-application/browser/index.html dist/frontend-web-application/browser/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
