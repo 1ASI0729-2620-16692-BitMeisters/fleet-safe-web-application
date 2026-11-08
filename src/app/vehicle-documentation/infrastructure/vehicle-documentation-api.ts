@@ -19,10 +19,10 @@ export class VehicleDocumentationApi extends BaseApi {
   getVehicleDocuments = (): Observable<VehicleDocument[]> => this.vehicleDocumentsEndpoint.getAll();
 
   registerVehicleDocument = (document: VehicleDocument): Observable<VehicleDocument> =>
-    this.vehicleDocumentsEndpoint.create(document);
+    this.vehicleDocumentsEndpoint.createForVehicle(document);
 
   updateVehicleDocument = (document: VehicleDocument): Observable<VehicleDocument> =>
-    this.vehicleDocumentsEndpoint.update(document, document.id);
+    this.vehicleDocumentsEndpoint.updateForVehicle(document);
 
   getDocumentTypes = (): Observable<DocumentType[]> => this.documentTypesEndpoint.getAll();
 

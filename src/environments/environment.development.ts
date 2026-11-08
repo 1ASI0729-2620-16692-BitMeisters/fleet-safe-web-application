@@ -6,6 +6,9 @@ export const environment = {
   backendApiBaseUrl: 'http://localhost:8080/api/v1',
   backendSignInEndpointPath: '/auth/login',
   backendUsersEndpointPath: '/users',
+  backendVehiclesEndpointPath: '/vehicles',
+  backendDocumentsEndpointPath: '/documents',
+  backendDocumentTypesEndpointPath: '/document-types',
   platformProviderInspectionsEndpointPath: '/inspections',
   platformProviderInspectionItemsEndpointPath: '/inspection-items',
   platformProviderVehicleAssignmentEndpointPath: '/drivers/me/vehicle-assignment',
@@ -21,6 +24,4 @@ export const environment = {
   platformProviderVehiclesEndpointPath: '/vehicles',
   platformProviderDriversEndpointPath: '/drivers',
   platformProviderVehicleAssignmentsEndpointPath: '/vehicle-assignments',
-  platformProviderVehicleDocumentsEndpointPath: '/vehicle-documents',
-  platformProviderDocumentTypesEndpointPath: '/document-types',
 };
