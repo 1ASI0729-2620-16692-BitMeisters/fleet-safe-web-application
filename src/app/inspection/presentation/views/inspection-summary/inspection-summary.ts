@@ -1,9 +1,10 @@
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, effect } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { InspectionStatus } from '../../../domain/model/inspection-status.enum';
 import { InspectionStore } from '../../../application/inspection.store';
 import { ResultValue } from '../../../domain/model/result-value.enum';
 
@@ -33,6 +34,12 @@ export class InspectionSummary {
 
   constructor() {
     if (this.store.currentInspection()?.id !== this.inspectionId) this.store.loadInspection(this.inspectionId);
+    effect(() => {
+      const inspection = this.store.currentInspection();
+      if (inspection?.id === this.inspectionId && inspection.status === InspectionStatus.COMPLETED) {
+        this.router.navigate(['/inspections', this.inspectionId, 'result']);
+      }
+    });
   }
 
   protected back(): void {
