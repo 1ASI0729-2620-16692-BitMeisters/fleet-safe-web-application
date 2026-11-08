@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { retry } from 'rxjs';
+import { retry, concatMap, map, of } from 'rxjs';
 import { IncidentApi } from '../infrastructure/incident-api';
 import { Incident } from '../domain/model/incident.entity';
 import { IncidentType } from '../domain/model/incident-type.entity';
@@ -9,6 +9,8 @@ import { ScheduleRepairCommand } from '../domain/model/schedule-repair.command';
 import { CompleteRepairCommand } from '../domain/model/complete-repair.command';
 import { AddIncidentFollowUpCommand } from '../domain/model/add-incident-follow-up.command';
 import { ResolveIncidentCommand } from '../domain/model/resolve-incident.command';
+import { IncidentVehicle } from '../domain/model/incident-vehicle.entity';
+import { IncidentInspection } from '../domain/model/incident-inspection.entity';
 
 /**
  * Holds incident application state and coordinates incident management behavior.
@@ -19,6 +21,8 @@ export class IncidentStore {
 
   private readonly incidentsSignal = signal<Incident[]>([]);
   private readonly incidentTypesSignal = signal<IncidentType[]>([]);
+  private readonly vehiclesSignal = signal<IncidentVehicle[]>([]);
+  private readonly inspectionsOfVehicleSignal = signal<IncidentInspection[]>([]);
   private readonly loadingSignal = signal<boolean>(false);
   private readonly errorSignal = signal<string | null>(null);
 
@@ -36,6 +40,10 @@ export class IncidentStore {
    * Readonly signal indicating if data is loading.
    */
   readonly loading = this.loadingSignal.asReadonly();
+
+  readonly vehicles = this.vehiclesSignal.asReadonly();
+
+  readonly inspectionsOfVehicle = this.inspectionsOfVehicleSignal.asReadonly();
 
   /**
    * Readonly signal for the current error message.
@@ -65,7 +73,48 @@ export class IncidentStore {
   constructor() {
     this.loadIncidents();
     this.loadIncidentTypes();
+    this.loadVehicles();
   }
+
+  plateOf = (vehicleId: string): string =>
+    this.vehicles().find((vehicle) => vehicle.id === vehicleId)?.plate ?? vehicleId;
+
+  loadVehicles = (): void => {
+    this.incidentApi
+      .getVehicles()
+      .pipe(retry(2))
+      .subscribe({
+        next: (vehicles) => this.vehiclesSignal.set(vehicles),
+        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to load vehicles')),
+      });
+  };
+
+  loadInspectionsOfVehicle = (vehicleId: string): void => {
+    this.inspectionsOfVehicleSignal.set([]);
+    if (!vehicleId) return;
+    this.incidentApi
+      .getInspectionsOfVehicle(vehicleId)
+      .pipe(retry(2))
+      .subscribe({
+        next: (inspections) => this.inspectionsOfVehicleSignal.set(inspections),
+        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to load inspections')),
+      });
+  };
+
+  private reloadIncident = (id: string): void => {
+    this.incidentApi.getIncident(id).subscribe({
+      next: (incident) => {
+        this.incidentsSignal.update((incidents) =>
+          incidents.map((i) => (i.id === incident.id ? incident : i)),
+        );
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        this.errorSignal.set(this.formatError(err, 'Failed to reload incident'));
+        this.loadingSignal.set(false);
+      },
+    });
+  };
 
   /**
    * Selects an incident by identifier.
@@ -197,27 +246,26 @@ export class IncidentStore {
    * Registers a corrective action for an incident.
    * @param command - Corrective action command.
    */
-  registerCorrectiveAction = (command: RegisterCorrectiveActionCommand): void => {
+  registerCorrectiveAction = (command: RegisterCorrectiveActionCommand, evidence: File | null = null): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.incidentApi
       .registerCorrectiveAction(command)
-      .pipe(retry(2))
+      .pipe(
+        concatMap((action) =>
+          evidence
+            ? this.incidentApi
+                .attachCorrectiveActionEvidence(action.incidentId, action.id, evidence)
+                .pipe(map(() => action))
+            : of(action),
+        ),
+      )
       .subscribe({
-        next: (action) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => {
-              if (i.id === action.incidentId) {
-                i.addCorrectiveAction(action);
-              }
-              return i;
-            }),
-          );
-          this.loadingSignal.set(false);
-        },
+        next: (action) => this.reloadIncident(action.incidentId),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to register corrective action'));
           this.loadingSignal.set(false);
+          this.reloadIncident(command.incidentId);
         },
       });
   };
@@ -233,17 +281,7 @@ export class IncidentStore {
       .scheduleRepair(command)
       .pipe(retry(2))
       .subscribe({
-        next: (repair) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => {
-              if (i.id === repair.incidentId) {
-                i.repairs.push(repair);
-              }
-              return i;
-            }),
-          );
-          this.loadingSignal.set(false);
-        },
+        next: (repair) => this.reloadIncident(repair.incidentId),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to schedule repair'));
           this.loadingSignal.set(false);
@@ -262,17 +300,7 @@ export class IncidentStore {
       .completeRepair(command)
       .pipe(retry(2))
       .subscribe({
-        next: (updatedRepair) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => {
-              if (i.id === updatedRepair.incidentId) {
-                i.repairs = i.repairs.map((r) => (r.id === updatedRepair.id ? updatedRepair : r));
-              }
-              return i;
-            }),
-          );
-          this.loadingSignal.set(false);
-        },
+        next: (updatedRepair) => this.reloadIncident(updatedRepair.incidentId),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to complete repair'));
           this.loadingSignal.set(false);
@@ -291,17 +319,7 @@ export class IncidentStore {
       .addIncidentFollowUp(command)
       .pipe(retry(2))
       .subscribe({
-        next: (followUp) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => {
-              if (i.id === followUp.incidentId) {
-                i.addFollowUp(followUp);
-              }
-              return i;
-            }),
-          );
-          this.loadingSignal.set(false);
-        },
+        next: (followUp) => this.reloadIncident(followUp.incidentId),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to add incident follow-up'));
           this.loadingSignal.set(false);
@@ -320,12 +338,7 @@ export class IncidentStore {
       .resolveIncident(command)
       .pipe(retry(2))
       .subscribe({
-        next: (updated) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => (i.id === updated.id ? updated : i)),
-          );
-          this.loadingSignal.set(false);
-        },
+        next: (updated) => this.reloadIncident(updated.id),
         error: (err) => {
           this.errorSignal.set(this.formatError(err, 'Failed to resolve incident'));
           this.loadingSignal.set(false);

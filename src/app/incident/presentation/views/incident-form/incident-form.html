@@ -12,7 +12,11 @@
     <!-- Vehicle -->
     <mat-form-field appearance="outline">
       <mat-label>{{ 'incident.vehicle' | translate }}</mat-label>
-      <input matInput formControlName="vehicleId" required />
+      <mat-select formControlName="vehicleId" required>
+        @for (vehicle of vehicles(); track vehicle.id) {
+          <mat-option [value]="vehicle.id">{{ vehicle.plate }} · {{ vehicle.description }}</mat-option>
+        }
+      </mat-select>
       @if (form.get('vehicleId')?.touched && form.get('vehicleId')!.hasError('required')) {
         <mat-error>{{ 'incident.error.vehicle-required' | translate }}</mat-error>
       }
@@ -31,12 +35,6 @@
       }
     </mat-form-field>
 
-    <!-- Inspection ID (optional) -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'incident.inspection' | translate }}</mat-label>
-      <input matInput formControlName="inspectionId" />
-    </mat-form-field>
-
     <!-- Origin -->
     <mat-form-field appearance="outline">
       <mat-label>{{ 'incident.origin.label' | translate }}</mat-label>
@@ -48,6 +46,21 @@
         }
       </mat-select>
     </mat-form-field>
+
+    @if (form.controls.origin.value === 'INSPECTION') {
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'incident.inspection' | translate }}</mat-label>
+        <mat-select formControlName="inspectionId">
+          @for (inspection of inspectionsOfVehicle(); track inspection.id) {
+            <mat-option [value]="inspection.id">
+              {{ inspection.startedAt | date: 'dd/MM/yyyy HH:mm' }} · {{ inspection.status }}
+            </mat-option>
+          } @empty {
+            <mat-option disabled>{{ 'incident.no-inspections' | translate }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    }
 
     <!-- Description -->
     <mat-form-field appearance="outline" class="full-width">
@@ -68,15 +81,6 @@
           </mat-option>
         }
       </mat-select>
-    </mat-form-field>
-
-    <!-- Reported By -->
-    <mat-form-field appearance="outline">
-      <mat-label>{{ 'incident.reported-by' | translate }}</mat-label>
-      <input matInput formControlName="reportedBy" required />
-      @if (form.get('reportedBy')?.touched && form.get('reportedBy')!.hasError('required')) {
-        <mat-error>{{ 'incident.error.reported-by-required' | translate }}</mat-error>
-      }
     </mat-form-field>
 
     <!-- Actions -->

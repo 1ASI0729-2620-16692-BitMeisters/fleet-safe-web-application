@@ -19,13 +19,9 @@
 
   <mat-form-field>
     <mat-label>{{ 'incident.repair.started-at' | translate }}</mat-label>
-    <input matInput type="date" formControlName="startedAt" required />
+    <input matInput type="datetime-local" formControlName="startedAt" required />
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>{{ 'incident.repair.finished-at' | translate }}</mat-label>
-    <input matInput type="date" formControlName="finishedAt" required />
-  </mat-form-field>
 
   <div class="form-actions">
     <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">

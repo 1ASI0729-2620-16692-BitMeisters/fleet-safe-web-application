@@ -1,7 +1,7 @@
 @if (incident(); as incident) {
   <div class="detail-container">
     <div class="header">
-      <h1>{{ 'incident.detail-title' | translate }} #{{ incident.id }}</h1>
+      <h1>{{ 'incident.detail-title' | translate }} · {{ plateOf(incident.vehicleId) }}</h1>
       <button mat-stroked-button (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
         {{ 'incident.back' | translate }}
@@ -16,7 +16,7 @@
         <div class="info-grid">
           <div class="info-item">
             <span class="label">{{ 'incident.vehicle' | translate }}</span>
-            <span class="value">{{ incident.vehicleId }}</span>
+            <span class="value">{{ plateOf(incident.vehicleId) }}</span>
           </div>
           <div class="info-item">
             <span class="label">{{ 'incident.origin.label' | translate }}</span>
@@ -32,7 +32,7 @@
           </div>
           <div class="info-item">
             <span class="label">{{ 'incident.reported-by' | translate }}</span>
-            <span class="value">{{ incident.reportedBy }}</span>
+            <span class="value">{{ incident.reportedByName || ('incident.unknown-user' | translate) }}</span>
           </div>
           <div class="info-item">
             <span class="label">{{ 'incident.reported-at' | translate }}</span>
@@ -41,6 +41,26 @@
         </div>
         <mat-divider></mat-divider>
         <p class="description">{{ incident.description }}</p>
+        @if (isOpen()) {
+          <div class="resolve">
+            <mat-form-field>
+              <mat-label>{{ 'incident.resolution.label' | translate }}</mat-label>
+              <mat-select [formControl]="resolutionType">
+                @for (type of resolutionTypes; track type) {
+                  <mat-option [value]="type">{{ 'incident.resolution.' + type | translate }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+            <button mat-flat-button color="primary" [disabled]="resolutionType.invalid" (click)="resolve()">
+              {{ 'incident.resolve' | translate }}
+            </button>
+          </div>
+        } @else if (incident.resolutionType) {
+          <p class="meta">
+            {{ 'incident.resolution.' + incident.resolutionType | translate }} ·
+            {{ incident.resolvedAt | date: 'dd/MM/yyyy HH:mm' }}
+          </p>
+        }
       </mat-card-content>
     </mat-card>
 
@@ -55,7 +75,10 @@
         @for (action of incident.correctiveActions; track action.id) {
           <div class="list-item">
             <p>{{ action.description }}</p>
-            <p class="meta">{{ action.performedBy }} · {{ action.performedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+            @if (action.evidenceUrl) {
+              <a [href]="action.evidenceUrl" target="_blank" rel="noopener">{{ 'incident.view-evidence' | translate }}</a>
+            }
+            <p class="meta">{{ action.performedByName || ('incident.unknown-user' | translate) }} · {{ action.performedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
           </div>
         } @empty {
           <p class="empty">{{ 'incident.no-corrective-actions' | translate }}</p>
@@ -78,6 +101,11 @@
               {{ repair.startedAt | date: 'dd/MM/yyyy HH:mm' }} → {{ repair.finishedAt | date: 'dd/MM/yyyy HH:mm' }} ·
               {{ 'incident.repair.status.' + repair.status | translate }}
             </p>
+            @if (repair.status !== 'COMPLETED') {
+              <button mat-stroked-button (click)="completeRepair(repair.id)">
+                {{ 'incident.complete-repair' | translate }}
+              </button>
+            }
           </div>
         } @empty {
           <p class="empty">{{ 'incident.no-repairs' | translate }}</p>
@@ -96,7 +124,7 @@
         @for (followUp of incident.followUps; track followUp.id) {
           <div class="list-item">
             <p>{{ followUp.note }}</p>
-            <p class="meta">{{ followUp.createdBy }} · {{ followUp.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+            <p class="meta">{{ followUp.createdByName || ('incident.unknown-user' | translate) }} · {{ followUp.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
           </div>
         } @empty {
           <p class="empty">{{ 'incident.no-follow-ups' | translate }}</p>

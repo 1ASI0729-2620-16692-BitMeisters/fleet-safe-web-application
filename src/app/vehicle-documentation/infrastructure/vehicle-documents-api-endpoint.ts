@@ -42,4 +42,18 @@ export class VehicleDocumentsApiEndpoint extends BaseApiEndpoint<
         catchError(this.handleError('Failed to update entity')),
       );
   }
+
+  attachFile(document: VehicleDocument, file: File): Observable<VehicleDocument> {
+    const form = new FormData();
+    form.append('file', file);
+    return this.http
+      .post<VehicleDocumentResource>(
+        `${vehiclesApiEndpointUrl}/${document.vehicleId}/documents/${document.id}/file`,
+        form,
+      )
+      .pipe(
+        map((updated) => this.assembler.toEntityFromResource(updated)),
+        catchError(this.handleError('Failed to attach the file of the document')),
+      );
+  }
 }

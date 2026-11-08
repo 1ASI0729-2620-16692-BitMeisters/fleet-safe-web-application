@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-11-08
+
+### Added
+- An incident is reported by choosing the plate of the vehicle and, when it comes from an inspection, one of its inspections. The signed-in user is recorded as the one who reports it, performs the corrective action or writes the follow-up.
+- A repair can be completed and an incident resolved from its detail.
+- Incidents show the names of the users who report them, perform their corrective actions or write their follow-ups, and the plate of the vehicle instead of identifiers.
+- The evidence of a corrective action and the scanned file of a vehicle document are uploaded as JPEG, PNG or PDF files instead of typed links.
+
+### Fixed
+- A repair is scheduled with its full start date and without an end date, which is set when it is completed.
+- The date of a corrective action is sent with its time zone.
+- The mock API assigns the driver the vehicle loaded with the demo data of the platform backend.
+- The driver list no longer shows the identifier of the account.
+
 ## [0.4.0] - 2026-11-08
 
 ### Added

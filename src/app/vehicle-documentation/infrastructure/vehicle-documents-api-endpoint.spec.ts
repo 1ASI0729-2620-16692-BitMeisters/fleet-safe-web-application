@@ -23,7 +23,7 @@ const resource: VehicleDocumentResource = {
 describe('VehicleDocumentsApiEndpoint', () => {
   let endpoint: VehicleDocumentsApiEndpoint;
   let http: HttpTestingController;
-  const document = new VehicleDocument(resource);
+  const document = new VehicleDocument({ ...resource, fileUrl: 'https://fleetsafe.blob.core.windows.net/evidences/soat.pdf?sig=read' });
 
   beforeEach(() => {
     TestBed.configureTestingModule({ providers: [provideHttpClient(), provideHttpClientTesting()] });
@@ -55,6 +55,17 @@ describe('VehicleDocumentsApiEndpoint', () => {
 
     const request = http.expectOne(`${environment.backendApiBaseUrl}/vehicles/${vehicleId}/documents/${resource.id}`);
     expect(request.request.method).toBe('PUT');
+    expect(request.request.body.fileUrl).toBeNull();
+    request.flush(resource);
+  });
+
+  it('attaches the scanned file of a document', () => {
+    const file = new File([new Uint8Array([1, 2, 3])], 'soat.pdf', { type: 'application/pdf' });
+    endpoint.attachFile(document, file).subscribe();
+
+    const request = http.expectOne(`${environment.backendApiBaseUrl}/vehicles/${vehicleId}/documents/${resource.id}/file`);
+    expect(request.request.method).toBe('POST');
+    expect((request.request.body as FormData).get('file')).toBe(file);
     request.flush(resource);
   });
 });

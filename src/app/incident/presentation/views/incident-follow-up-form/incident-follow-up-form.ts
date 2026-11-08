@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
+import { IamStore } from '../../../../iam/application/iam.store';
 import { IncidentStore } from '../../../application/incident.store';
 import { AddIncidentFollowUpCommand } from '../../../domain/model/add-incident-follow-up.command';
 
@@ -32,12 +33,10 @@ export class IncidentFollowUpForm {
   /**
    * Form group for the follow-up form.
    */
+  private iamStore = inject(IamStore);
+
   form = this.fb.group({
     note: new FormControl<string>('', {
-      nonNullable: true,
-      validators: [Validators.required],
-    }),
-    createdBy: new FormControl<string>('', {
       nonNullable: true,
       validators: [Validators.required],
     }),
@@ -61,7 +60,7 @@ export class IncidentFollowUpForm {
     const command = new AddIncidentFollowUpCommand({
       incidentId: this.incidentId,
       note: this.form.value.note!,
-      createdBy: this.form.value.createdBy!,
+      createdBy: this.iamStore.currentUser()?.id ?? '',
       createdAt: new Date().toISOString(),
     });
 

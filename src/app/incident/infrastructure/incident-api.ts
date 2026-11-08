@@ -9,6 +9,10 @@ import { Repair } from '../domain/model/repair.entity';
 import { IncidentFollowUp } from '../domain/model/incident-follow-up.entity';
 import { IncidentsApiEndpoint } from './incidents-api-endpoint';
 import { IncidentTypesApiEndpoint } from './incident-types-api-endpoint';
+import { IncidentVehiclesApiEndpoint } from './incident-vehicles-api-endpoint';
+import { IncidentInspectionsApiEndpoint } from './incident-inspections-api-endpoint';
+import { IncidentVehicle } from '../domain/model/incident-vehicle.entity';
+import { IncidentInspection } from '../domain/model/incident-inspection.entity';
 import { RegisterCorrectiveActionApiEndpoint } from './register-corrective-action-api-endpoint';
 import { ScheduleRepairApiEndpoint } from './schedule-repair-api-endpoint';
 import { CompleteRepairApiEndpoint } from './complete-repair-api-endpoint';
@@ -34,6 +38,8 @@ export class IncidentApi extends BaseApi {
 
   private readonly incidentsEndpoint = new IncidentsApiEndpoint(this.http);
   private readonly incidentTypesEndpoint = new IncidentTypesApiEndpoint(this.http);
+  private readonly incidentVehiclesEndpoint = new IncidentVehiclesApiEndpoint(this.http);
+  private readonly incidentInspectionsEndpoint = new IncidentInspectionsApiEndpoint(this.http);
   private readonly registerCorrectiveActionEndpoint = new RegisterCorrectiveActionApiEndpoint(
     this.http,
     new RegisterCorrectiveActionAssembler(),
@@ -54,6 +60,11 @@ export class IncidentApi extends BaseApi {
     this.http,
     new ResolveIncidentAssembler(),
   );
+
+  getVehicles = (): Observable<IncidentVehicle[]> => this.incidentVehiclesEndpoint.getAll();
+
+  getInspectionsOfVehicle = (vehicleId: string): Observable<IncidentInspection[]> =>
+    this.incidentInspectionsEndpoint.getByVehicleId(vehicleId);
 
   // ── Incidents ──────────────────────────────────────────────
 
@@ -123,6 +134,13 @@ export class IncidentApi extends BaseApi {
     command: RegisterCorrectiveActionCommand,
   ): Observable<CorrectiveAction> =>
     this.registerCorrectiveActionEndpoint.registerCorrectiveAction(command);
+
+  attachCorrectiveActionEvidence = (
+    incidentId: string,
+    correctiveActionId: string,
+    file: File,
+  ): Observable<unknown> =>
+    this.registerCorrectiveActionEndpoint.attachEvidence(incidentId, correctiveActionId, file);
 
   // ── Repairs ────────────────────────────────────────────────
 
