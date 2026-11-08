@@ -42,7 +42,6 @@ export class DriverList {
     'licenseExpirationDate',
     'licenseStatus',
     'assignedVehicle',
-    'userId',
   ];
 
   protected readonly rows = computed<DriverRow[]>(() => {

@@ -81,16 +81,6 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="userId">
-          <th mat-header-cell *matHeaderCellDef>
-            {{ 'fleet.drivers.userId' | translate }}
-          </th>
-
-          <td mat-cell *matCellDef="let row" class="muted">
-            {{ row.driver.userId }}
-          </td>
-        </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
