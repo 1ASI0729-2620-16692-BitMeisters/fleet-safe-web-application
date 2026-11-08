@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map } from 'rxjs';
 import { BaseApiEndpoint } from '../../shared/infrastructure/base-api-endpoint';
 import { environment } from '../../../environments/environment';
 import { Company } from '../domain/model/company.entity';
@@ -14,8 +15,15 @@ export class CompaniesApiEndpoint extends BaseApiEndpoint<
   constructor(http: HttpClient) {
     super(
       http,
-      `${environment.platformProviderApiBaseUrl}${environment.platformProviderCompaniesEndpointPath}`,
+      `${environment.backendApiBaseUrl}${environment.backendCompaniesEndpointPath}`,
       new CompanyAssembler(),
+    );
+  }
+
+  getMine(): Observable<Company[]> {
+    return this.http.get<CompanyResource>(`${this.endpointUrl}/me`).pipe(
+      map((resource) => [this.assembler.toEntityFromResource(resource)]),
+      catchError(this.handleError('Failed to fetch the company')),
     );
   }
 }
