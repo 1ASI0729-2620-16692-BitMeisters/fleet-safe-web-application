@@ -6,6 +6,9 @@ export const environment = {
   backendApiBaseUrl: 'https://fleetsafe-api.nicesky-02088f36.chilecentral.azurecontainerapps.io/api/v1',
   backendSignInEndpointPath: '/tokens',
   backendUsersEndpointPath: '/users',
+  backendVehiclesEndpointPath: '/vehicles',
+  backendDocumentsEndpointPath: '/documents',
+  backendDocumentTypesEndpointPath: '/document-types',
   platformProviderInspectionsEndpointPath: '/inspections',
   platformProviderInspectionItemsEndpointPath: '/inspection-items',
   platformProviderVehicleAssignmentEndpointPath: '/drivers/me/vehicle-assignment',
@@ -21,6 +24,4 @@ export const environment = {
   platformProviderVehiclesEndpointPath: '/vehicles',
   platformProviderDriversEndpointPath: '/drivers',
   platformProviderVehicleAssignmentsEndpointPath: '/vehicle-assignments',
-  platformProviderVehicleDocumentsEndpointPath: '/vehicle-documents',
-  platformProviderDocumentTypesEndpointPath: '/document-types',
 };
