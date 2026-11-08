@@ -4,7 +4,7 @@ export const environment = {
   landingPageUrl: 'https://1asi0729-2620-16692-bitmeisters.github.io/fleet-safe-website',
   platformProviderApiBaseUrl: 'http://localhost:4010',
   backendApiBaseUrl: 'http://localhost:4010',
-  backendSignInEndpointPath: '/auth/login',
+  backendSignInEndpointPath: '/tokens',
   backendUsersEndpointPath: '/users',
   platformProviderInspectionsEndpointPath: '/inspections',
   platformProviderInspectionItemsEndpointPath: '/inspection-items',
