@@ -8,7 +8,7 @@ import {
   DocumentedVehiclesResponse,
 } from './documented-vehicles-response';
 
-const documentedVehiclesApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderVehiclesEndpointPath}`;
+const documentedVehiclesApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendVehiclesEndpointPath}`;
 
 export class DocumentedVehiclesApiEndpoint extends BaseApiEndpoint<
   DocumentedVehicle,
