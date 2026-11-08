@@ -13,6 +13,7 @@ export interface IncidentResource extends BaseResource {
   severity: string;
   status: string;
   reportedBy: string;
+  reportedByName?: string | null;
   reportedAt: string;
   resolutionType: string;
   resolvedAt: string;
@@ -31,6 +32,7 @@ export interface CorrectiveActionResource extends BaseResource {
   incidentId: string;
   description: string;
   performedBy: string;
+  performedByName?: string | null;
   performedAt: string;
   evidenceUrl: string;
 }
@@ -56,6 +58,7 @@ export interface IncidentFollowUpResource extends BaseResource {
   incidentId: string;
   note: string;
   createdBy: string;
+  createdByName?: string | null;
   createdAt: string;
 }
 

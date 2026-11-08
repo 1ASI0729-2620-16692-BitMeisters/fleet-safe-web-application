@@ -14,3 +14,22 @@ form {
   display: flex;
   gap: 8px;
 }
+
+.evidence-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  margin-bottom: 16px;
+  padding: 0 16px;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.evidence-picker input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}

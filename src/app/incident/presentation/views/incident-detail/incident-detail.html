@@ -1,7 +1,7 @@
 @if (incident(); as incident) {
   <div class="detail-container">
     <div class="header">
-      <h1>{{ 'incident.detail-title' | translate }} #{{ incident.id }}</h1>
+      <h1>{{ 'incident.detail-title' | translate }} · {{ plateOf(incident.vehicleId) }}</h1>
       <button mat-stroked-button (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
         {{ 'incident.back' | translate }}
@@ -32,7 +32,7 @@
           </div>
           <div class="info-item">
             <span class="label">{{ 'incident.reported-by' | translate }}</span>
-            <span class="value">{{ incident.reportedBy }}</span>
+            <span class="value">{{ incident.reportedByName || ('incident.unknown-user' | translate) }}</span>
           </div>
           <div class="info-item">
             <span class="label">{{ 'incident.reported-at' | translate }}</span>
@@ -75,7 +75,10 @@
         @for (action of incident.correctiveActions; track action.id) {
           <div class="list-item">
             <p>{{ action.description }}</p>
-            <p class="meta">{{ action.performedBy }} · {{ action.performedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+            @if (action.evidenceUrl) {
+              <a [href]="action.evidenceUrl" target="_blank" rel="noopener">{{ 'incident.view-evidence' | translate }}</a>
+            }
+            <p class="meta">{{ action.performedByName || ('incident.unknown-user' | translate) }} · {{ action.performedAt | date: 'dd/MM/yyyy HH:mm' }}</p>
           </div>
         } @empty {
           <p class="empty">{{ 'incident.no-corrective-actions' | translate }}</p>
@@ -121,7 +124,7 @@
         @for (followUp of incident.followUps; track followUp.id) {
           <div class="list-item">
             <p>{{ followUp.note }}</p>
-            <p class="meta">{{ followUp.createdBy }} · {{ followUp.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
+            <p class="meta">{{ followUp.createdByName || ('incident.unknown-user' | translate) }} · {{ followUp.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
           </div>
         } @empty {
           <p class="empty">{{ 'incident.no-follow-ups' | translate }}</p>

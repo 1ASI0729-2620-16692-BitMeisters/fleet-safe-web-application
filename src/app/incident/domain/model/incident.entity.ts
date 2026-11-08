@@ -19,6 +19,7 @@ export class Incident implements BaseEntity {
   #severity: IncidentSeverity;
   #status: IncidentStatus;
   #reportedBy: string;
+  #reportedByName: string;
   #reportedAt: string;
   #resolutionType: string;
   #resolvedAt: string;
@@ -38,6 +39,7 @@ export class Incident implements BaseEntity {
     severity: IncidentSeverity;
     status: IncidentStatus;
     reportedBy: string;
+    reportedByName?: string;
     reportedAt: string;
     resolutionType?: string;
     resolvedAt?: string;
@@ -56,6 +58,7 @@ export class Incident implements BaseEntity {
     this.#severity = props.severity;
     this.#status = props.status;
     this.#reportedBy = props.reportedBy;
+    this.#reportedByName = props.reportedByName ?? '';
     this.#reportedAt = props.reportedAt;
     this.#resolutionType = props.resolutionType ?? '';
     this.#resolvedAt = props.resolvedAt ?? '';
@@ -120,6 +123,10 @@ export class Incident implements BaseEntity {
   }
   set status(value: IncidentStatus) {
     this.#status = value;
+  }
+
+  get reportedByName(): string {
+    return this.#reportedByName;
   }
 
   get reportedBy(): string {

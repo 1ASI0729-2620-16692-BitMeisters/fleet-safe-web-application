@@ -25,17 +25,9 @@
     [dataSource]="dataSource()"
     class="mat-elevation-z8 fs-table"
     matSort
-    matSortActive="id"
-    matSortDirection="asc"
+    matSortActive="reportedAt"
+    matSortDirection="desc"
     matSortDisableClear>
-    <!-- ID -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>
-        {{ 'incidents.id' | translate }}
-      </th>
-      <td mat-cell *matCellDef="let incident">{{ incident.id }}</td>
-    </ng-container>
-
     <!-- Vehicle -->
     <ng-container matColumnDef="vehicleId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
