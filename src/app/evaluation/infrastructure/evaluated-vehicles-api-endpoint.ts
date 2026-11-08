@@ -5,7 +5,7 @@ import { EvaluatedVehicle } from '../domain/model/evaluated-vehicle.entity';
 import { EvaluatedVehicleAssembler } from './evaluated-vehicle-assembler';
 import { EvaluatedVehicleResource, EvaluatedVehiclesResponse } from './evaluated-vehicles-response';
 
-const evaluatedVehiclesApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderVehiclesEndpointPath}`;
+const evaluatedVehiclesApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendVehiclesEndpointPath}`;
 
 export class EvaluatedVehiclesApiEndpoint extends BaseApiEndpoint<
   EvaluatedVehicle,
