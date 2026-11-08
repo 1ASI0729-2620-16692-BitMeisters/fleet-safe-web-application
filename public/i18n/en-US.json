@@ -526,6 +526,7 @@
     "signIn": "Sign in",
     "users": "Users",
     "newUser": "New user",
+    "vehicleStatusBoard": "Vehicle status",
     "inspectionSummary": "Inspection summary",
     "inspectionResult": "Inspection result"
   },
@@ -587,6 +588,28 @@
       "saving": "Creating…",
       "created": "The account {{email}} was created.",
       "duplicateEmail": "There is already an account with this email."
+    }
+  },
+  "evaluation": {
+    "title": "Vehicle status",
+    "subtitle": "Which vehicles can operate today, according to their latest evaluation.",
+    "filter": "Status",
+    "caption": "Current status of each vehicle",
+    "plate": "Plate",
+    "vehicle": "Vehicle",
+    "evaluatedAt": "Last evaluation",
+    "state": "Status",
+    "override": "Block lifted",
+    "loading": "Loading the status of the vehicles…",
+    "empty": "No vehicles with this status.",
+    "error": "The status of the vehicles could not be loaded.",
+    "retry": "Try again",
+    "status": {
+      "ALL": "All",
+      "ENABLED": "Enabled",
+      "OBSERVED": "Observed",
+      "NOT_ENABLED": "Not Enabled",
+      "NOT_INSPECTED": "Not inspected"
     }
   }
 }

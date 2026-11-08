@@ -11,6 +11,7 @@ export const environment = {
   backendInspectionsEndpointPath: '/inspections',
   backendInspectionItemsEndpointPath: '/inspection-items',
   backendDocumentTypesEndpointPath: '/document-types',
+  backendCurrentAuthorizationsEndpointPath: '/operational-authorizations/current',
   platformProviderVehicleAssignmentEndpointPath: '/drivers/me/vehicle-assignment',
   platformProviderIncidentsEndpointPath: '/incidents',
   platformProviderIncidentTypesEndpointPath: '/incident-types',
