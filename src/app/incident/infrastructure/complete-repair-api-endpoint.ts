@@ -7,7 +7,7 @@ import { CompleteRepairResource, CompleteRepairResponse } from './complete-repai
 import { Repair } from '../domain/model/repair.entity';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
 
-const completeRepairApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderCompleteRepairEndpointPath}`;
+const completeRepairApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendIncidentsEndpointPath}`;
 
 /**
  * Encapsulates repair completion HTTP operations.

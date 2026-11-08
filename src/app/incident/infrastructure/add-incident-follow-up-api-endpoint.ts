@@ -10,7 +10,7 @@ import {
 import { IncidentFollowUp } from '../domain/model/incident-follow-up.entity';
 import { ErrorHandlingEnabledBaseType } from '../../shared/infrastructure/error-handling-enabled-base-type';
 
-const addIncidentFollowUpApiEndpointUrl = `${environment.platformProviderApiBaseUrl}${environment.platformProviderAddIncidentFollowUpEndpointPath}`;
+const addIncidentFollowUpApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendIncidentsEndpointPath}`;
 
 /**
  * Encapsulates incident follow-up HTTP operations.
