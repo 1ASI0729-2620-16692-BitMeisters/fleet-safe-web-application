@@ -1,0 +1,24 @@
+<section>
+  <header>
+    <h1>{{ 'inspection.resultScreen.title' | translate }}</h1>
+  </header>
+
+  @if (store.vehicleStatus(); as status) {
+    <div class="status" [class]="status" role="status">
+      <mat-icon aria-hidden="true">{{ icon() }}</mat-icon>
+      <h2>{{ 'inspection.resultScreen.status.' + status | translate }}</h2>
+      <p>{{ 'inspection.resultScreen.text.' + status | translate: { plate: store.assignedVehicle()?.plate ?? '' } }}</p>
+    </div>
+
+    <article class="next">
+      <h3>{{ 'inspection.resultScreen.whatHappensNow' | translate }}</h3>
+      <p>{{ 'inspection.resultScreen.instruction.' + status | translate }}</p>
+    </article>
+  } @else if (store.error(); as message) {
+    <p class="error" role="alert">{{ message }}</p>
+  } @else {
+    <p role="status">{{ 'inspection.resultScreen.evaluating' | translate }}</p>
+  }
+
+  <button mat-stroked-button type="button" (click)="backToStart()">{{ 'inspection.resultScreen.backToStart' | translate }}</button>
+</section>

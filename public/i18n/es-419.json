@@ -107,7 +107,10 @@
       "answerAllToContinue": "Responde todos los elementos para continuar.",
       "overall": "{{answered}} de {{total}} elementos respondidos",
       "safety": "Seguridad",
-      "photo": "Foto si falla"
+      "photo": "Foto si falla",
+      "observationSaved": "Observación guardada · {{count}} fotos",
+      "addObservation": "Agregar observación",
+      "addPhotos": "Agregar fotos"
     },
     "dialog": {
       "observationLabel": "Observación",
@@ -115,7 +118,11 @@
       "evidenceLabel": "Evidencia",
       "requiredOnThisItem": "requerido en este elemento",
       "photoRequiredError": "Se requiere al menos una fotografía para este elemento de seguridad.",
-      "saveAndContinue": "Guardar y continuar"
+      "saveAndContinue": "Guardar y continuar",
+      "addPhoto": "Agregar foto",
+      "removePhoto": "Quitar foto",
+      "photoFormatError": "Solo se aceptan fotos JPEG o PNG.",
+      "cancel": "Cancelar"
     },
     "summary": {
       "title": "Resumen",
@@ -124,7 +131,8 @@
       "observed": "Observados",
       "failed": "Fallas",
       "evaluationNotice": "Al enviar, el sistema evaluará el vehículo según las reglas de su empresa.",
-      "submitInspection": "Enviar inspección"
+      "submitInspection": "Enviar inspección",
+      "pendingFindings": "A {{count}} hallazgos todavía les falta la observación o la foto."
     },
     "resultScreen": {
       "title": "Resultado",
@@ -133,7 +141,23 @@
       "notEnabledInstruction": "La incidencia fue registrada y su supervisor ha sido notificado. No inicie la operación hasta recibir instrucciones.",
       "observedInstruction": "El vehículo está autorizado para operar con observaciones registradas para seguimiento preventivo.",
       "enabledInstruction": "El vehículo se encuentra totalmente habilitado para operar.",
-      "backToStart": "Volver al inicio"
+      "backToStart": "Volver al inicio",
+      "status": {
+        "ENABLED": "Habilitado",
+        "OBSERVED": "Observado",
+        "NOT_ENABLED": "No habilitado"
+      },
+      "text": {
+        "ENABLED": "El vehículo {{plate}} puede operar.",
+        "OBSERVED": "El vehículo {{plate}} puede operar con hallazgos.",
+        "NOT_ENABLED": "El vehículo {{plate}} no cumple con las condiciones para operar."
+      },
+      "instruction": {
+        "ENABLED": "El vehículo se encuentra totalmente habilitado para operar.",
+        "OBSERVED": "El vehículo está autorizado para operar con observaciones registradas para seguimiento preventivo.",
+        "NOT_ENABLED": "La incidencia fue registrada y su supervisor ha sido notificado. No inicie la operación hasta recibir instrucciones."
+      },
+      "evaluating": "Evaluando el vehículo…"
     },
     "history": {
       "title": "Historial de inspecciones",
@@ -502,7 +526,9 @@
     "signIn": "Iniciar sesión",
     "users": "Usuarios",
     "newUser": "Nuevo usuario",
-    "vehicleStatusBoard": "Estado de los vehículos"
+    "vehicleStatusBoard": "Estado de los vehículos",
+    "inspectionSummary": "Resumen de la inspección",
+    "inspectionResult": "Resultado de la inspección"
   },
   "paginator": {
     "itemsPerPage": "Elementos por página:",

@@ -1,0 +1,59 @@
+.observation {
+  width: 100%;
+}
+
+.saved-observation {
+  margin: 0 0 12px;
+}
+
+.evidence-label {
+  font-size: 13px;
+  color: #54627a;
+}
+
+.photos {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.photos img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.new-photos {
+  padding: 0;
+  list-style: none;
+}
+
+.new-photos li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-photo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px dashed #94a3b8;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.add-photo input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.error {
+  color: #b42318;
+}

@@ -1,0 +1,83 @@
+:host {
+  display: block;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.vehicle,
+.finding {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.counts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.counts article {
+  background: white;
+  border: 1px solid #dbe3ed;
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.counts strong {
+  display: block;
+  font-size: 28px;
+}
+
+.OK {
+  color: #16724b;
+}
+
+.OBSERVED {
+  color: #946000;
+}
+
+.FAIL {
+  color: #b42318;
+}
+
+.finding.FAIL {
+  border-color: #b42318;
+}
+
+.finding p {
+  color: #17243c;
+  margin: 0;
+}
+
+.photos {
+  display: flex;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.photos img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+footer p {
+  font-size: 13px;
+  color: #607089;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.error {
+  color: #b42318;
+}
