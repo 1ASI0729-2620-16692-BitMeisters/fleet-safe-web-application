@@ -1,0 +1,54 @@
+<section>
+  <header>
+    <h1>{{ 'inspection.summary.title' | translate }}</h1>
+  </header>
+
+  @if (store.currentInspection(); as inspection) {
+    <mat-card appearance="outlined" class="vehicle">
+      <strong>{{ store.assignedVehicle()?.plate }} · {{ store.assignedVehicle()?.brand }} {{ store.assignedVehicle()?.model }}</strong>
+      <span>
+        {{ 'inspection.summary.odometer' | translate }} {{ inspection.odometer | number }} km ·
+        {{ inspection.startedAt | date: 'HH:mm' }}
+      </span>
+    </mat-card>
+
+    <div class="counts">
+      <article class="OK"><strong>{{ compliant() }}</strong>{{ 'inspection.summary.compliant' | translate }}</article>
+      <article class="OBSERVED"><strong>{{ observed() }}</strong>{{ 'inspection.summary.observed' | translate }}</article>
+      <article class="FAIL"><strong>{{ failed() }}</strong>{{ 'inspection.summary.failed' | translate }}</article>
+    </div>
+
+    @for (finding of findings(); track finding.id) {
+      <mat-card appearance="outlined" class="finding" [class]="finding.result">
+        <strong>{{ finding.itemName }}</strong>
+        @if (finding.observations[0]; as observation) {
+          <p>{{ observation.description }}</p>
+          <ul class="photos">
+            @for (evidence of observation.evidences; track evidence.id) {
+              <li><img [src]="evidence.fileUrl" [alt]="finding.itemName" /></li>
+            }
+          </ul>
+        }
+      </mat-card>
+    }
+
+    @if (pendingFindings().length) {
+      <p class="error" role="alert">{{ 'inspection.summary.pendingFindings' | translate: { count: pendingFindings().length } }}</p>
+    }
+    @if (store.error(); as message) {
+      <p class="error" role="alert">{{ message }}</p>
+    }
+
+    <footer>
+      <p>{{ 'inspection.summary.evaluationNotice' | translate }}</p>
+      <div class="actions">
+        <button mat-stroked-button type="button" (click)="back()">{{ 'inspection.checklist.back' | translate }}</button>
+        <button mat-flat-button type="button" [disabled]="pendingFindings().length > 0 || store.submitting()" (click)="submit()">
+          {{ 'inspection.summary.submitInspection' | translate }}
+        </button>
+      </div>
+    </footer>
+  } @else if (store.loading()) {
+    <p role="status">{{ 'inspection.checklist.loading' | translate }}</p>
+  }
+</section>

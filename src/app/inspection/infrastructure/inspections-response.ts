@@ -21,7 +21,7 @@ export interface InspectionResultResource {
   itemName: string;
   itemCategory: string;
   result: string;
-  createdAt: string;
+  createdAt?: string;
   observations: ObservationResource[];
 }
 
@@ -34,8 +34,8 @@ export interface InspectionResource extends BaseResource {
   startedAt: string;
   completedAt: string | null;
   results: InspectionResultResource[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface InspectionsResponse extends BaseResponse {
