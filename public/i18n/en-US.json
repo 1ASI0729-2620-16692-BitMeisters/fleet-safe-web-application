@@ -155,7 +155,7 @@
       "instruction": {
         "ENABLED": "The vehicle is fully authorized to operate.",
         "OBSERVED": "The vehicle is authorized to operate with findings recorded for preventive follow-up.",
-        "NOT_ENABLED": "The incident was registered and your supervisor has been notified. Do not start the operation until you receive instructions."
+        "NOT_ENABLED": "Tell your supervisor and do not start the operation: the vehicle can only leave once a supervisor lifts the block."
       },
       "evaluating": "Evaluating the vehicle…"
     },

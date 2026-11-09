@@ -155,7 +155,7 @@
       "instruction": {
         "ENABLED": "El vehículo se encuentra totalmente habilitado para operar.",
         "OBSERVED": "El vehículo está autorizado para operar con observaciones registradas para seguimiento preventivo.",
-        "NOT_ENABLED": "La incidencia fue registrada y su supervisor ha sido notificado. No inicie la operación hasta recibir instrucciones."
+        "NOT_ENABLED": "Avisa a tu supervisor y no inicies la operación: el vehículo solo puede salir cuando un supervisor levante el bloqueo."
       },
       "evaluating": "Evaluando el vehículo…"
     },
