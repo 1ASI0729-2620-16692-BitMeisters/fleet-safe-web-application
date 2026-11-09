@@ -203,6 +203,176 @@
       "SAFETY_EQUIPMENT": "Equipo de seguridad",
       "BODY_AND_COUPLING": "Carrocería y acople",
       "DOCUMENTATION": "Documentos"
+    },
+    "catalog": {
+      "CMP-01": {
+        "name": "Nivel de aceite del motor",
+        "description": "Nivel y estado del aceite en la varilla"
+      },
+      "CMP-02": {
+        "name": "Nivel de refrigerante",
+        "description": "Nivel del tanque de expansión del radiador"
+      },
+      "CMP-03": {
+        "name": "Nivel de líquido de frenos",
+        "description": "Nivel del depósito de líquido"
+      },
+      "CMP-04": {
+        "name": "Batería y bornes",
+        "description": "Limpieza y ajuste de los bornes de la batería"
+      },
+      "CMP-05": {
+        "name": "Parabrisas y ventanas",
+        "description": "Limpios y sin rajaduras ni picaduras"
+      },
+      "CMP-06": {
+        "name": "Limpiaparabrisas y líquido",
+        "description": "Estado de las plumillas y de los aspersores"
+      },
+      "CMP-07": {
+        "name": "Puertas y cerraduras",
+        "description": "Cierre correcto de las puertas y funcionamiento de las manijas"
+      },
+      "CMP-08": {
+        "name": "Carrocería y chasis",
+        "description": "Sin fisuras estructurales ni abolladuras"
+      },
+      "CMP-09": {
+        "name": "Sistema de escape",
+        "description": "Estado del silenciador y del tubo de escape"
+      },
+      "CMP-10": {
+        "name": "Tanque y tapa de combustible",
+        "description": "Sello de la tapa y sujeción del tanque"
+      },
+      "CMP-11": {
+        "name": "Fugas de fluidos",
+        "description": "Sin charcos ni manchas húmedas debajo del vehículo"
+      },
+      "CMP-12": {
+        "name": "Instrumentos del tablero",
+        "description": "Indicadores, testigos y alertas"
+      },
+      "CMP-13": {
+        "name": "Odómetro y velocímetro",
+        "description": "Lectura correcta del kilometraje y la velocidad"
+      },
+      "CMP-14": {
+        "name": "GPS / Unidad de rastreo",
+        "description": "Encendida y con recepción satelital"
+      },
+      "CMP-15": {
+        "name": "Luces traseras",
+        "description": "Luces de posición y de gálibo traseras"
+      },
+      "CMP-16": {
+        "name": "Luz de placa",
+        "description": "Iluminación del número de placa"
+      },
+      "CMP-17": {
+        "name": "Lámpara lateral derecha",
+        "description": "Luz de gálibo ámbar del lado derecho"
+      },
+      "CMP-18": {
+        "name": "Lámpara lateral izquierda",
+        "description": "Luz de gálibo ámbar del lado izquierdo"
+      },
+      "CMP-19": {
+        "name": "Parachoques delantero y trasero",
+        "description": "Fijación segura y barra antiempotramiento"
+      },
+      "CMP-20": {
+        "name": "Quinta rueda / Acople",
+        "description": "Mecanismo de bloqueo del pin rey y lubricación de la placa"
+      },
+      "CMP-21": {
+        "name": "Mangueras de freno de aire",
+        "description": "Acoples de las mangueras espirales y manos de acople"
+      },
+      "CMP-22": {
+        "name": "Suspensión neumática / Muelles",
+        "description": "Presión de los fuelles y estado de las hojas de muelle"
+      },
+      "CMP-23": {
+        "name": "Cardán y crucetas",
+        "description": "Sin pernos sueltos ni juego en las crucetas"
+      },
+      "CMP-24": {
+        "name": "Asiento del conductor y ergonomía",
+        "description": "Regulación del asiento con suspensión y del respaldo"
+      },
+      "DOC-01": {
+        "name": "Tarjeta de identificación vehicular",
+        "description": "Título de inscripción vigente en SUNARP"
+      },
+      "DOC-02": {
+        "name": "Certificado SOAT",
+        "description": "Seguro obligatorio de accidentes de tránsito vigente"
+      },
+      "DOC-03": {
+        "name": "Certificado de Inspección Técnica (CITV)",
+        "description": "Certificado de inspección técnica vehicular vigente"
+      },
+      "DOC-04": {
+        "name": "Permiso de operación SUTRAN",
+        "description": "Autorización vigente para el transporte de carga"
+      },
+      "SAF-01": {
+        "name": "Sistema de frenos",
+        "description": "Funcionamiento del freno de servicio y del freno de emergencia"
+      },
+      "SAF-02": {
+        "name": "Luces de freno",
+        "description": "Luces de parada traseras"
+      },
+      "SAF-03": {
+        "name": "Faros delanteros",
+        "description": "Luces altas y bajas"
+      },
+      "SAF-04": {
+        "name": "Direccionales y luces de emergencia",
+        "description": "Indicadores de dirección delanteros y traseros"
+      },
+      "SAF-05": {
+        "name": "Dirección y suspensión",
+        "description": "Juego del volante y de las barras de dirección"
+      },
+      "SAF-06": {
+        "name": "Neumáticos y tuercas",
+        "description": "Profundidad del dibujo y presión de inflado"
+      },
+      "SAF-07": {
+        "name": "Llanta de repuesto",
+        "description": "Estado y presión de la llanta de repuesto"
+      },
+      "SAF-08": {
+        "name": "Cinturones de seguridad",
+        "description": "Cinturones de tres puntos del conductor y del acompañante"
+      },
+      "SAF-09": {
+        "name": "Extintor",
+        "description": "Extintor de polvo químico seco ABC cargado y con precinto vigente"
+      },
+      "SAF-10": {
+        "name": "Conos de seguridad",
+        "description": "Al menos tres conos reflectivos"
+      },
+      "SAF-11": {
+        "name": "Botiquín de primeros auxilios",
+        "description": "Insumos médicos básicos obligatorios"
+      },
+      "SAF-12": {
+        "name": "Alarma de retroceso",
+        "description": "Alarma sonora de marcha atrás"
+      },
+      "SAF-13": {
+        "name": "Claxon",
+        "description": "Claxon de dos tonos"
+      },
+      "SAF-14": {
+        "name": "Espejos retrovisores",
+        "description": "Espejos principales, gran angular y de acera"
+      }
     }
   },
   "option": {

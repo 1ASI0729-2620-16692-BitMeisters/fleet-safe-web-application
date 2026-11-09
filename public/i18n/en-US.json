@@ -203,6 +203,176 @@
       "SAFETY_EQUIPMENT": "Safety equipment",
       "BODY_AND_COUPLING": "Body and coupling",
       "DOCUMENTATION": "Documents"
+    },
+    "catalog": {
+      "CMP-01": {
+        "name": "Engine oil level",
+        "description": "Dipstick oil level and condition"
+      },
+      "CMP-02": {
+        "name": "Coolant level",
+        "description": "Radiator expansion tank level"
+      },
+      "CMP-03": {
+        "name": "Brake fluid level",
+        "description": "Fluid reservoir level"
+      },
+      "CMP-04": {
+        "name": "Battery and terminals",
+        "description": "Cleanliness and tightness of battery poles"
+      },
+      "CMP-05": {
+        "name": "Windshield and windows",
+        "description": "Clean and free from cracks or chips"
+      },
+      "CMP-06": {
+        "name": "Wipers and washer fluid",
+        "description": "Blade condition and spray nozzles"
+      },
+      "CMP-07": {
+        "name": "Doors and latches",
+        "description": "Proper door locking and handle operation"
+      },
+      "CMP-08": {
+        "name": "Body and chassis",
+        "description": "Absence of structural cracks or dents"
+      },
+      "CMP-09": {
+        "name": "Exhaust system",
+        "description": "Silencer condition and emission pipe"
+      },
+      "CMP-10": {
+        "name": "Fuel tank and cap",
+        "description": "Cap seal and tank mounting straps"
+      },
+      "CMP-11": {
+        "name": "Fluid leaks",
+        "description": "Absence of puddle or wet spots underneath"
+      },
+      "CMP-12": {
+        "name": "Dashboard instruments",
+        "description": "Gauges, warning lights and indicators"
+      },
+      "CMP-13": {
+        "name": "Odometer and speedometer",
+        "description": "Accurate mileage and speed readout"
+      },
+      "CMP-14": {
+        "name": "GPS / Tracking unit",
+        "description": "Active power and satellite reception"
+      },
+      "CMP-15": {
+        "name": "Tail lights",
+        "description": "Rear marker and position lights"
+      },
+      "CMP-16": {
+        "name": "License plate light",
+        "description": "Illumination of plate number"
+      },
+      "CMP-17": {
+        "name": "Right side lamp",
+        "description": "Right side amber clearance lamp"
+      },
+      "CMP-18": {
+        "name": "Left side lamp",
+        "description": "Left side amber clearance lamp"
+      },
+      "CMP-19": {
+        "name": "Front and rear bumpers",
+        "description": "Secure mounting and anti-underrun guard"
+      },
+      "CMP-20": {
+        "name": "Fifth wheel / Coupling",
+        "description": "Kingpin locking mechanism and plate lubrication"
+      },
+      "CMP-21": {
+        "name": "Air brake hoses",
+        "description": "Spiral hose couplings and glad hands"
+      },
+      "CMP-22": {
+        "name": "Air suspension / Leaf springs",
+        "description": "Air bellows pressure and spring leaves"
+      },
+      "CMP-23": {
+        "name": "Driveshaft and universal joints",
+        "description": "No loose bolts or universal joint play"
+      },
+      "CMP-24": {
+        "name": "Driver seat and ergonomics",
+        "description": "Suspension seat adjustment and backrest"
+      },
+      "DOC-01": {
+        "name": "Vehicle registration card",
+        "description": "Valid SUNARP registration title"
+      },
+      "DOC-02": {
+        "name": "SOAT certificate",
+        "description": "Valid compulsory traffic accident insurance"
+      },
+      "DOC-03": {
+        "name": "Technical Inspection Certificate (CITV)",
+        "description": "Current roadworthiness inspection certificate"
+      },
+      "DOC-04": {
+        "name": "SUTRAN operating permit",
+        "description": "Current freight operating concession authorization"
+      },
+      "SAF-01": {
+        "name": "Brake system",
+        "description": "Foot brake and emergency brake operation"
+      },
+      "SAF-02": {
+        "name": "Brake lights",
+        "description": "Rear stop signal lights"
+      },
+      "SAF-03": {
+        "name": "Headlights",
+        "description": "High and low beam lamps"
+      },
+      "SAF-04": {
+        "name": "Turn signals and hazard lights",
+        "description": "Front and rear direction indicators"
+      },
+      "SAF-05": {
+        "name": "Steering and suspension",
+        "description": "Play in steering wheel and tie rods"
+      },
+      "SAF-06": {
+        "name": "Tires and wheel nuts",
+        "description": "Tread depth and inflation pressure"
+      },
+      "SAF-07": {
+        "name": "Spare tire",
+        "description": "Spare wheel integrity and pressure"
+      },
+      "SAF-08": {
+        "name": "Seatbelts",
+        "description": "Driver and passenger three-point belts"
+      },
+      "SAF-09": {
+        "name": "Fire extinguisher",
+        "description": "Charged ABC dry chemical extinguisher with valid seal"
+      },
+      "SAF-10": {
+        "name": "Safety cones",
+        "description": "At least three reflective hazard cones"
+      },
+      "SAF-11": {
+        "name": "First aid kit",
+        "description": "Mandatory basic medical supplies"
+      },
+      "SAF-12": {
+        "name": "Reverse alarm",
+        "description": "Audible backup warning buzzer"
+      },
+      "SAF-13": {
+        "name": "Horn",
+        "description": "Dual tone horn acoustic warning"
+      },
+      "SAF-14": {
+        "name": "Rearview mirrors",
+        "description": "Main, wide-angle and curb mirrors"
+      }
     }
   },
   "option": {

@@ -7,10 +7,18 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { InspectionStatus } from '../../../domain/model/inspection-status.enum';
 import { InspectionStore } from '../../../application/inspection.store';
 import { ResultValue } from '../../../domain/model/result-value.enum';
+import { InspectionItemTextPipe } from '../../pipes/inspection-item-text.pipe';
 
 @Component({
   selector: 'app-inspection-summary',
-  imports: [DatePipe, DecimalPipe, MatButtonModule, MatCardModule, TranslatePipe],
+  imports: [
+    DatePipe,
+    DecimalPipe,
+    MatButtonModule,
+    MatCardModule,
+    TranslatePipe,
+    InspectionItemTextPipe,
+  ],
   templateUrl: './inspection-summary.html',
   styleUrl: './inspection-summary.css',
 })
@@ -23,23 +31,35 @@ export class InspectionSummary {
   protected readonly compliant = computed(() => this.count(ResultValue.OK));
   protected readonly observed = computed(() => this.count(ResultValue.OBSERVED));
   protected readonly failed = computed(() => this.count(ResultValue.FAIL));
-  protected readonly findings = computed(() => this.results().filter((result) => result.result !== ResultValue.OK));
+  protected readonly findings = computed(() =>
+    this.results().filter((result) => result.result !== ResultValue.OK),
+  );
   protected readonly pendingFindings = computed(() =>
     this.findings().filter((finding) => {
-      const item = this.store.inspectionItems().find((candidate) => candidate.id === finding.inspectionItemId);
+      const item = this.store
+        .inspectionItems()
+        .find((candidate) => candidate.id === finding.inspectionItemId);
       const observation = finding.observations[0];
       return !observation || (item?.requiresEvidence && observation.evidences.length === 0);
     }),
   );
 
   constructor() {
-    if (this.store.currentInspection()?.id !== this.inspectionId) this.store.loadInspection(this.inspectionId);
+    if (this.store.currentInspection()?.id !== this.inspectionId)
+      this.store.loadInspection(this.inspectionId);
     effect(() => {
       const inspection = this.store.currentInspection();
-      if (inspection?.id === this.inspectionId && inspection.status === InspectionStatus.COMPLETED) {
+      if (
+        inspection?.id === this.inspectionId &&
+        inspection.status === InspectionStatus.COMPLETED
+      ) {
         this.router.navigate(['/inspections', this.inspectionId, 'result']);
       }
     });
+  }
+
+  protected codeOf(inspectionItemId: string): string | undefined {
+    return this.store.inspectionItems().find((item) => item.id === inspectionItemId)?.code;
   }
 
   protected back(): void {
@@ -47,7 +67,9 @@ export class InspectionSummary {
   }
 
   protected submit(): void {
-    this.store.submitInspection(() => this.router.navigate(['/inspections', this.inspectionId, 'result']));
+    this.store.submitInspection(() =>
+      this.router.navigate(['/inspections', this.inspectionId, 'result']),
+    );
   }
 
   private count(result: ResultValue): number {

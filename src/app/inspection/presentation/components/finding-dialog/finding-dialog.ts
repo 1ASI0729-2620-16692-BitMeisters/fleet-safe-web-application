@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslatePipe } from '@ngx-translate/core';
 import { InspectionStore } from '../../../application/inspection.store';
 import { InspectionItem } from '../../../domain/model/inspection-item.entity';
+import { InspectionItemTextPipe } from '../../pipes/inspection-item-text.pipe';
 
 export interface FindingDialogData {
   item: InspectionItem;
@@ -17,7 +18,16 @@ const ACCEPTED_PHOTOS = ['image/jpeg', 'image/png'];
 
 @Component({
   selector: 'app-finding-dialog',
-  imports: [FormsModule, MatButtonModule, MatDialogModule, MatFormFieldModule, MatIconModule, MatInputModule, TranslatePipe],
+  imports: [
+    FormsModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule,
+    TranslatePipe,
+    InspectionItemTextPipe,
+  ],
   templateUrl: './finding-dialog.html',
   styleUrl: './finding-dialog.css',
 })
@@ -26,14 +36,18 @@ export class FindingDialog {
   protected readonly store = inject(InspectionStore);
   private readonly dialogRef = inject(MatDialogRef<FindingDialog>);
 
-  protected readonly result = computed(() => this.store.currentInspection()?.resultFor(this.data.item.id));
+  protected readonly result = computed(() =>
+    this.store.currentInspection()?.resultFor(this.data.item.id),
+  );
   protected readonly observation = computed(() => this.result()?.observations[0]);
   protected readonly description = signal('');
   protected readonly photos = signal<File[]>([]);
   protected readonly rejectedPhoto = signal(false);
 
   protected readonly photoMissing = computed(
-    () => this.data.item.requiresEvidence && (this.observation()?.evidences.length ?? 0) + this.photos().length === 0,
+    () =>
+      this.data.item.requiresEvidence &&
+      (this.observation()?.evidences.length ?? 0) + this.photos().length === 0,
   );
   protected readonly canSave = computed(
     () => (!!this.observation() || this.description().trim().length > 0) && !this.photoMissing(),
@@ -53,6 +67,8 @@ export class FindingDialog {
 
   protected save(): void {
     if (!this.canSave()) return;
-    this.store.saveFinding(this.data.item, this.description().trim(), this.photos(), () => this.dialogRef.close(true));
+    this.store.saveFinding(this.data.item, this.description().trim(), this.photos(), () =>
+      this.dialogRef.close(true),
+    );
   }
 }

@@ -117,7 +117,7 @@
                   <div class="item-body">
                     <div class="item-text">
                       <div class="item-title">
-                        <span class="item-name">{{ item.name }}</span>
+                        <span class="item-name">{{ item.code | inspectionItemText: 'name' : item.name }}</span>
                         @if (item.isSafetyComponent) {
                           <span class="tag tag-safety">
                             <mat-icon aria-hidden="true">shield</mat-icon>
@@ -132,7 +132,7 @@
                         }
                       </div>
                       @if (item.description) {
-                        <span class="item-description">{{ item.description }}</span>
+                        <span class="item-description">{{ item.code | inspectionItemText: 'description' : item.description }}</span>
                       }
                       @if (isFinding(item)) {
                         @if (observationOf(item); as observation) {
@@ -158,7 +158,7 @@
                     </div>
                     <app-result-selector
                       [value]="resultOf(item)"
-                      [label]="item.name"
+                      [label]="item.code | inspectionItemText: 'name' : item.name"
                       [disabled]="store.savingItemId() === item.id"
                       (selected)="answer(item, $event)"
                     />
