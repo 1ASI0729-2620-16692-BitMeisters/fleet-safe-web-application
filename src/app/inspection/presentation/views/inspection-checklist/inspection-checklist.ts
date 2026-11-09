@@ -17,6 +17,7 @@ import { FindingDialog, FindingDialogData } from '../../components/finding-dialo
 import { ResultSelector } from '../../components/result-selector/result-selector';
 import { SystemProgress, SystemsList } from '../../components/systems-list/systems-list';
 import { SystemsSheet, SystemsSheetData } from '../../components/systems-sheet/systems-sheet';
+import { InspectionItemTextPipe } from '../../pipes/inspection-item-text.pipe';
 
 const SYSTEM_ICONS: Record<ItemSystem, string> = {
   [ItemSystem.BRAKES]: 'stop_circle',
@@ -45,6 +46,7 @@ interface ChecklistStep extends SystemProgress {
     RouterLink,
     SystemsList,
     TranslatePipe,
+    InspectionItemTextPipe,
   ],
   templateUrl: './inspection-checklist.html',
   styleUrl: './inspection-checklist.css',
@@ -135,7 +137,10 @@ export class InspectionChecklist {
 
   protected openFinding(item: InspectionItem): void {
     const data: FindingDialogData = { item };
-    this.dialog.open<FindingDialog, FindingDialogData, boolean>(FindingDialog, { data, width: '480px' });
+    this.dialog.open<FindingDialog, FindingDialogData, boolean>(FindingDialog, {
+      data,
+      width: '480px',
+    });
   }
 
   protected answer(item: InspectionItem, result: ResultValue): void {

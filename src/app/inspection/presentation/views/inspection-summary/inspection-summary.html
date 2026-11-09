@@ -20,12 +20,12 @@
 
     @for (finding of findings(); track finding.id) {
       <mat-card appearance="outlined" class="finding" [class]="finding.result">
-        <strong>{{ finding.itemName }}</strong>
+        <strong>{{ codeOf(finding.inspectionItemId) | inspectionItemText: 'name' : finding.itemName }}</strong>
         @if (finding.observations[0]; as observation) {
           <p>{{ observation.description }}</p>
           <ul class="photos">
             @for (evidence of observation.evidences; track evidence.id) {
-              <li><img [src]="evidence.fileUrl" [alt]="finding.itemName" /></li>
+              <li><img [src]="evidence.fileUrl" [alt]="codeOf(finding.inspectionItemId) | inspectionItemText: 'name' : finding.itemName" /></li>
             }
           </ul>
         }
