@@ -60,7 +60,8 @@ export class StartInspection extends BaseForm {
       updatedAt: now,
     });
 
-    this.store.startInspection(inspection);
-    this.router.navigate(['/inspections', inspection.id, 'execute']).then();
+    this.store.startInspection(inspection, (created) =>
+      this.router.navigate(['/inspections', created.id, 'execute']).then(),
+    );
   }
 }

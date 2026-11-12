@@ -114,7 +114,7 @@ export class InspectionStore {
       });
   };
 
-  startInspection = (inspection: Inspection): void => {
+  startInspection = (inspection: Inspection, started?: (inspection: Inspection) => void): void => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
     this.currentInspectionSignal.set(inspection);
@@ -126,6 +126,7 @@ export class InspectionStore {
           this.currentInspectionSignal.set(createdInspection);
           this.loadingSignal.set(false);
           this.notifier.success('inspection.notifications.started');
+          started?.(createdInspection);
         },
         error: (err) => {
           this.currentInspectionSignal.set(null);
