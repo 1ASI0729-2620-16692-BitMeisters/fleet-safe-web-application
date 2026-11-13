@@ -54,18 +54,25 @@ export class IncidentFollowUpForm {
   /**
    * Submits the form to add the follow-up.
    */
-  submit() {
+  async submit() {
     if (this.form.invalid) return;
+
+    const createdBy = this.iamStore.currentUser()?.id;
+
+    if (!createdBy) return;
 
     const command = new AddIncidentFollowUpCommand({
       incidentId: this.incidentId,
-      note: this.form.value.note!,
-      createdBy: this.iamStore.currentUser()?.id ?? '',
+      note: this.form.controls.note.value,
+      createdBy,
       createdAt: new Date().toISOString(),
     });
 
-    this.store.addIncidentFollowUp(command);
-    this.router.navigate(['incidents', this.incidentId]).then();
+    const success = await this.store.addIncidentFollowUp(command);
+
+    if (success) {
+      await this.router.navigate(['incidents', this.incidentId]);
+    }
   }
 
   /**
