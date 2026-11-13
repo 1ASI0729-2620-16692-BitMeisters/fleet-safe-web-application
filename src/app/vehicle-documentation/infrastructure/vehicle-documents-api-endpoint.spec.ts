@@ -63,7 +63,7 @@ describe('VehicleDocumentsApiEndpoint', () => {
     const file = new File([new Uint8Array([1, 2, 3])], 'soat.pdf', { type: 'application/pdf' });
     endpoint.attachFile(document, file).subscribe();
 
-    const request = http.expectOne(`${environment.backendApiBaseUrl}/vehicles/${vehicleId}/documents/${resource.id}/file`);
+    const request = http.expectOne(`${environment.backendApiBaseUrl}/documents/${resource.id}/files`);
     expect(request.request.method).toBe('POST');
     expect((request.request.body as FormData).get('file')).toBe(file);
     request.flush(resource);
