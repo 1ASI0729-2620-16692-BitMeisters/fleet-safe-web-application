@@ -8,7 +8,7 @@ import {
   OperationalAuthorizationsResponse,
 } from './operational-authorizations-response';
 
-const currentAuthorizationsApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendCurrentAuthorizationsEndpointPath}`;
+const currentAuthorizationsApiEndpointUrl = `${environment.backendApiBaseUrl}${environment.backendOperationalStatusesEndpointPath}`;
 
 export class CurrentAuthorizationsApiEndpoint extends BaseApiEndpoint<
   OperationalAuthorization,
