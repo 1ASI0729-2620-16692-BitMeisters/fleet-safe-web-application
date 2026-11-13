@@ -59,19 +59,22 @@ export class RepairForm {
   /**
    * Submits the form to schedule the repair.
    */
-  submit() {
+  async submit() {
     if (this.form.invalid) return;
 
     const command = new ScheduleRepairCommand({
       incidentId: this.incidentId,
-      workshop: this.form.value.workshop!,
-      cost: this.form.value.cost!,
-      startedAt: new Date(this.form.value.startedAt!).toISOString(),
+      workshop: this.form.controls.workshop.value,
+      cost: this.form.controls.cost.value,
+      startedAt: new Date(this.form.controls.startedAt.value).toISOString(),
       finishedAt: null,
     });
 
-    this.store.scheduleRepair(command);
-    this.router.navigate(['incidents', this.incidentId]).then();
+    const success = await this.store.scheduleRepair(command);
+
+    if (success) {
+      await this.router.navigate(['incidents', this.incidentId]);
+    }
   }
 
   /**
