@@ -43,8 +43,8 @@ export class InspectionApi extends BaseApi {
   addObservation = (inspectionId: string, resultId: string, description: string): Observable<Observation> =>
     this.inspectionsEndpoint.addObservation(inspectionId, resultId, description);
 
-  attachEvidence = (inspectionId: string, resultId: string, observationId: string, photo: File): Observable<Evidence> =>
-    this.inspectionsEndpoint.attachEvidence(inspectionId, resultId, observationId, photo);
+  attachEvidence = (inspectionId: string, observationId: string, photo: File): Observable<Evidence> =>
+    this.inspectionsEndpoint.attachEvidence(inspectionId, observationId, photo);
 
   completeInspection = (inspectionId: string): Observable<Inspection> => this.inspectionsEndpoint.complete(inspectionId);
 

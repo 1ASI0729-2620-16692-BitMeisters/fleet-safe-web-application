@@ -179,7 +179,7 @@ export class InspectionStore {
           photos.length === 0
             ? of(observation)
             : from(photos).pipe(
-                concatMap((photo) => this.inspectionApi.attachEvidence(inspection.id, result.id, observation.id, photo)),
+                concatMap((photo) => this.inspectionApi.attachEvidence(inspection.id, observation.id, photo)),
                 last(),
               ),
         ),

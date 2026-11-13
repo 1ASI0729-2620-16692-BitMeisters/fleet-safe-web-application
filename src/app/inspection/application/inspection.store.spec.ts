@@ -204,7 +204,7 @@ describe('InspectionStore', () => {
 
     expect(api.addObservation).toHaveBeenCalledWith('inspection-1', 'result-1', 'Soft pedal');
     expect(api.attachEvidence).toHaveBeenCalledTimes(2);
-    expect(api.attachEvidence).toHaveBeenLastCalledWith('inspection-1', 'result-1', 'observation-1', photos[1]);
+    expect(api.attachEvidence).toHaveBeenLastCalledWith('inspection-1', 'observation-1', photos[1]);
     expect(done).toHaveBeenCalled();
     expect(store.savingFinding()).toBe(false);
   });
