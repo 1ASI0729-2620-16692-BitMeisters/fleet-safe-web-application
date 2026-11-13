@@ -71,19 +71,26 @@ export class CorrectiveActionForm {
   /**
    * Submits the form to register the corrective action.
    */
-  submit() {
+  async submit() {
     if (this.form.invalid) return;
+
+    const performedBy = this.iamStore.currentUser()?.id;
+
+    if (!performedBy) return;
 
     const command = new RegisterCorrectiveActionCommand({
       incidentId: this.incidentId,
-      description: this.form.value.description!,
-      performedBy: this.iamStore.currentUser()?.id ?? '',
-      performedAt: new Date(this.form.value.performedAt!).toISOString(),
+      description: this.form.controls.description.value,
+      performedBy,
+      performedAt: new Date(this.form.controls.performedAt.value).toISOString(),
       evidenceUrl: '',
     });
 
-    this.store.registerCorrectiveAction(command, this.evidence());
-    this.router.navigate(['incidents', this.incidentId]).then();
+    const success = await this.store.registerCorrectiveAction(command, this.evidence());
+
+    if (success) {
+      await this.router.navigate(['incidents', this.incidentId]);
+    }
   }
 
   /**
