@@ -494,7 +494,8 @@
       "NO_ACTION_REQUIRED": "No action required"
     },
     "unknown-user": "Unknown user",
-    "view-evidence": "View evidence"
+    "view-evidence": "View evidence",
+    "move-to-review": "Move to review"
   },
   "fleet": {
     "title": "Fleet Management",
