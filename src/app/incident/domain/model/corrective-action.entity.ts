@@ -10,7 +10,7 @@ export class CorrectiveAction implements BaseEntity {
   #performedBy: string;
   #performedByName: string;
   #performedAt: string;
-  #evidenceUrl: string;
+  #evidenceUrl: string | null;
 
   constructor(props: {
     id: string;
@@ -19,7 +19,7 @@ export class CorrectiveAction implements BaseEntity {
     performedBy: string;
     performedByName?: string;
     performedAt: string;
-    evidenceUrl: string;
+    evidenceUrl: string | null;
   }) {
     this.#id = props.id;
     this.#incidentId = props.incidentId;
@@ -69,10 +69,11 @@ export class CorrectiveAction implements BaseEntity {
     this.#performedAt = value;
   }
 
-  get evidenceUrl(): string {
+  get evidenceUrl(): string | null {
     return this.#evidenceUrl;
   }
-  set evidenceUrl(value: string) {
+
+  set evidenceUrl(value: string | null) {
     this.#evidenceUrl = value;
   }
 }

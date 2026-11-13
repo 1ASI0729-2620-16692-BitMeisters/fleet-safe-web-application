@@ -10,7 +10,7 @@ export class Repair implements BaseEntity {
   #workshop: string;
   #cost: number;
   #startedAt: string;
-  #finishedAt: string;
+  #finishedAt: string | null;
   #status: RepairStatus;
 
   constructor(props: {
@@ -19,7 +19,7 @@ export class Repair implements BaseEntity {
     workshop: string;
     cost: number;
     startedAt: string;
-    finishedAt: string;
+    finishedAt: string | null;
     status: RepairStatus;
   }) {
     this.#id = props.id;
@@ -66,10 +66,11 @@ export class Repair implements BaseEntity {
     this.#startedAt = value;
   }
 
-  get finishedAt(): string {
+  get finishedAt(): string | null {
     return this.#finishedAt;
   }
-  set finishedAt(value: string) {
+
+  set finishedAt(value: string | null) {
     this.#finishedAt = value;
   }
 
