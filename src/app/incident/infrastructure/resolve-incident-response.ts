@@ -14,8 +14,8 @@ export interface ResolveIncidentResource extends BaseResource {
   status: string;
   reportedBy: string;
   reportedAt: string;
-  resolutionType: string;
-  resolvedAt: string;
+  resolutionType: string | null;
+  resolvedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
