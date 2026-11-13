@@ -48,7 +48,7 @@ export class VehicleDocumentsApiEndpoint extends BaseApiEndpoint<
     form.append('file', file);
     return this.http
       .post<VehicleDocumentResource>(
-        `${vehiclesApiEndpointUrl}/${document.vehicleId}/documents/${document.id}/file`,
+        `${vehicleDocumentsApiEndpointUrl}/${document.id}/files`,
         form,
       )
       .pipe(
