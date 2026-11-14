@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  version: '0.6.0',
+  version: '0.6.1',
   landingPageUrl: 'https://1asi0729-2620-16692-bitmeisters.github.io/fleet-safe-website',
   platformProviderApiBaseUrl: 'http://localhost:4010',
   backendApiBaseUrl: 'http://localhost:4010',
