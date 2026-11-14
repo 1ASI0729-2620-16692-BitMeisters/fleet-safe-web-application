@@ -15,8 +15,8 @@ export interface IncidentResource extends BaseResource {
   reportedBy: string;
   reportedByName?: string | null;
   reportedAt: string;
-  resolutionType: string;
-  resolvedAt: string;
+  resolutionType: string | null;
+  resolvedAt: string | null;
   createdAt: string;
   updatedAt: string;
   correctiveActions: CorrectiveActionResource[];
@@ -34,7 +34,7 @@ export interface CorrectiveActionResource extends BaseResource {
   performedBy: string;
   performedByName?: string | null;
   performedAt: string;
-  evidenceUrl: string;
+  evidenceUrl: string | null;
 }
 
 /**
@@ -46,7 +46,7 @@ export interface RepairResource extends BaseResource {
   workshop: string;
   cost: number;
   startedAt: string;
-  finishedAt: string;
+  finishedAt: string | null;
   status: string;
 }
 

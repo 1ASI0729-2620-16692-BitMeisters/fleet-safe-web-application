@@ -15,6 +15,11 @@ import {
   IncidentFollowUpResource,
 } from './incidents-response';
 
+import {
+  ReportIncidentRequest,
+  UpdateIncidentRequest,
+} from './incident-requests';
+
 /**
  * Maps incident entities to and from API resources.
  */
@@ -49,16 +54,39 @@ export class IncidentAssembler implements BaseAssembler<
       reportedBy: resource.reportedBy,
       reportedByName: resource.reportedByName ?? '',
       reportedAt: resource.reportedAt,
-      resolutionType: resource.resolutionType ?? '',
-      resolvedAt: resource.resolvedAt ?? '',
-      createdAt: resource.createdAt ?? '',
-      updatedAt: resource.updatedAt ?? '',
+      resolutionType: resource.resolutionType,
+      resolvedAt: resource.resolvedAt,
+      createdAt: resource.createdAt,
+      updatedAt: resource.updatedAt,
       correctiveActions: (resource.correctiveActions ?? []).map((a) =>
         this.toCorrectiveActionFromResource(a),
       ),
       repairs: (resource.repairs ?? []).map((r) => this.toRepairFromResource(r)),
       followUps: (resource.followUps ?? []).map((f) => this.toIncidentFollowUpFromResource(f)),
     });
+  /**
+   * Converts an Incident entity into a report incident request.
+   */
+  toReportRequestFromEntity = (entity: Incident): ReportIncidentRequest => ({
+    vehicleId: entity.vehicleId,
+    incidentTypeId: entity.incidentTypeId,
+    inspectionId: entity.inspectionId,
+    origin: entity.origin,
+    description: entity.description,
+    severity: entity.severity,
+    reportedBy: entity.reportedBy,
+  });
+
+  /**
+   * Converts an Incident entity into an update incident request.
+   */
+  toUpdateRequestFromEntity = (
+    entity: Incident,
+    incidentId: string,
+  ): UpdateIncidentRequest => ({
+    incidentId,
+    ...this.toReportRequestFromEntity(entity),
+  });
 
   /**
    * Converts an Incident entity to an IncidentResource.

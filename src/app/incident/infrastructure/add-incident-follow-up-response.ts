@@ -8,6 +8,7 @@ export interface AddIncidentFollowUpResource extends BaseResource {
   incidentId: string;
   note: string;
   createdBy: string;
+  createdByName?: string | null;
   createdAt: string;
 }
 

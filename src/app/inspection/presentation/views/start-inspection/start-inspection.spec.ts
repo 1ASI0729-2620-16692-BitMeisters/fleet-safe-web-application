@@ -83,6 +83,21 @@ describe('StartInspection', () => {
     expect(started.driverId).toBe('driver-1');
     expect(started.odometer).toBe(184320);
     expect(started.status).toBe(InspectionStatus.IN_PROGRESS);
-    expect(navigate).toHaveBeenCalledWith(['/inspections', started.id, 'execute']);
+    expect(navigate).not.toHaveBeenCalled();
+
+    const created = new Inspection({
+      id: 'created-by-backend',
+      vehicleId: started.vehicleId,
+      driverId: started.driverId,
+      status: started.status,
+      odometer: started.odometer,
+      startedAt: started.startedAt,
+      completedAt: null,
+      results: [],
+      createdAt: started.createdAt,
+      updatedAt: started.updatedAt,
+    });
+    store.startInspection.mock.calls[0][1](created);
+    expect(navigate).toHaveBeenCalledWith(['/inspections', 'created-by-backend', 'execute']);
   });
 });

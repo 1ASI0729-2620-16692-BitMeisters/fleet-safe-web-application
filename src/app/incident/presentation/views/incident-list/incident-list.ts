@@ -72,8 +72,8 @@ export class IncidentList {
    * Deletes an incident by ID.
    * @param id - The ID of the incident to delete.
    */
-  deleteIncident(id: string) {
-    this.store.deleteIncident(id);
+  async deleteIncident(id: string): Promise<void> {
+    await this.store.deleteIncident(id);
   }
 
   /**

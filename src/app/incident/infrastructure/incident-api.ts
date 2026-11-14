@@ -28,6 +28,8 @@ import { ScheduleRepairAssembler } from './schedule-repair-assembler';
 import { CompleteRepairAssembler } from './complete-repair-assembler';
 import { AddIncidentFollowUpAssembler } from './add-incident-follow-up-assembler';
 import { ResolveIncidentAssembler } from './resolve-incident-assembler';
+import { UpdateIncidentStatusApiEndpoint } from './update-incident-status-api-endpoint';
+import { IncidentAssembler } from './incident-assembler';
 
 /**
  * Infrastructure facade for incident-related endpoint operations.
@@ -59,6 +61,11 @@ export class IncidentApi extends BaseApi {
   private readonly resolveIncidentEndpoint = new ResolveIncidentApiEndpoint(
     this.http,
     new ResolveIncidentAssembler(),
+  );
+
+  private readonly updateIncidentStatusEndpoint = new UpdateIncidentStatusApiEndpoint(
+    this.http,
+    new IncidentAssembler(),
   );
 
   getVehicles = (): Observable<IncidentVehicle[]> => this.incidentVehiclesEndpoint.getAll();
@@ -171,4 +178,10 @@ export class IncidentApi extends BaseApi {
    */
   resolveIncident = (command: ResolveIncidentCommand): Observable<Incident> =>
     this.resolveIncidentEndpoint.resolveIncident(command);
+
+  /**
+   * Moves an incident to review.
+   */
+  updateIncidentStatus = (incidentId: string): Observable<Incident> =>
+    this.updateIncidentStatusEndpoint.updateIncidentStatus(incidentId);
 }

@@ -19,6 +19,7 @@ export class AddIncidentFollowUpAssembler {
       incidentId: response.incidentId,
       note: response.note,
       createdBy: response.createdBy,
+      createdByName: response.createdByName,
       createdAt: response.createdAt,
     }) as AddIncidentFollowUpResource;
 
@@ -42,6 +43,7 @@ export class AddIncidentFollowUpAssembler {
       incidentId: resource.incidentId,
       note: resource.note,
       createdBy: resource.createdBy,
+      createdByName: resource.createdByName ?? '',
       createdAt: resource.createdAt,
     });
 }

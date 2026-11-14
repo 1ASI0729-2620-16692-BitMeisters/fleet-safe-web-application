@@ -126,30 +126,36 @@ export class IncidentForm {
   /**
    * Submits the form to create or update the incident.
    */
-  submit() {
+  async submit() {
     if (this.form.invalid) return;
 
-    const incident: Incident = new Incident({
+    const reportedBy = this.reportedBy ?? this.iamStore.currentUser()?.id;
+
+    if (!reportedBy) return;
+
+    const incident = new Incident({
       id: this.incidentId ?? crypto.randomUUID(),
-      vehicleId: this.form.value.vehicleId!,
-      incidentTypeId: this.form.value.incidentTypeId!,
+      vehicleId: this.form.controls.vehicleId.value,
+      incidentTypeId: this.form.controls.incidentTypeId.value!,
       inspectionId:
-        this.form.value.origin === IncidentOrigin.INSPECTION ? (this.form.value.inspectionId ?? null) : null,
-      origin: this.form.value.origin!,
-      description: this.form.value.description!,
-      severity: this.form.value.severity!,
+        this.form.controls.origin.value === IncidentOrigin.INSPECTION
+          ? this.form.controls.inspectionId.value
+          : null,
+      origin: this.form.controls.origin.value,
+      description: this.form.controls.description.value,
+      severity: this.form.controls.severity.value,
       status: IncidentStatus.REGISTERED,
-      reportedBy: this.reportedBy ?? this.iamStore.currentUser()?.id ?? '',
+      reportedBy,
       reportedAt: new Date().toISOString(),
     });
 
-    if (this.isEdit) {
-      this.store.updateIncident(incident);
-    } else {
-      this.store.addIncident(incident);
-    }
+    const success = this.isEdit
+      ? await this.store.updateIncident(incident)
+      : await this.store.addIncident(incident);
 
-    this.router.navigate(['incidents']).then();
+    if (success) {
+      await this.router.navigate(['incidents']);
+    }
   }
 
   /**

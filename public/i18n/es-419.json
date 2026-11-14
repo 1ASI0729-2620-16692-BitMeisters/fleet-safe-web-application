@@ -494,7 +494,8 @@
       "NO_ACTION_REQUIRED": "No requiere acción"
     },
     "unknown-user": "Usuario desconocido",
-    "view-evidence": "Ver evidencia"
+    "view-evidence": "Ver evidencia",
+    "move-to-review": "Enviar a revisión"
   },
   "fleet": {
     "title": "Gestión de Flota",

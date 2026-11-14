@@ -50,6 +50,10 @@ export class IncidentDetail {
 
   readonly plateOf = this.store.plateOf;
 
+  readonly error = this.store.error;
+
+  readonly loading = this.store.loading;
+
   readonly resolutionTypes = ['REPAIRED', 'REPLACED', 'NO_ACTION_REQUIRED'];
 
   readonly resolutionType = new FormControl<string | null>(null, [Validators.required]);
@@ -59,8 +63,17 @@ export class IncidentDetail {
     return status === IncidentStatus.REGISTERED || status === IncidentStatus.IN_REVIEW;
   });
 
-  completeRepair(repairId: string) {
-    this.store.completeRepair(
+  /**
+   * Moves the incident from REGISTERED to IN_REVIEW.
+   */
+  async moveToReview(): Promise<void> {
+    if (this.incident()?.status !== IncidentStatus.REGISTERED) return;
+
+    await this.store.updateIncidentStatus(this.incidentId());
+  }
+
+  async completeRepair(repairId: string): Promise<void> {
+    await this.store.completeRepair(
       new CompleteRepairCommand({
         incidentId: this.incidentId(),
         repairId,
@@ -69,9 +82,10 @@ export class IncidentDetail {
     );
   }
 
-  resolve() {
+  async resolve(): Promise<void> {
     if (this.resolutionType.invalid) return;
-    this.store.resolveIncident(
+
+    await this.store.resolveIncident(
       new ResolveIncidentCommand({
         incidentId: this.incidentId(),
         resolutionType: this.resolutionType.value!,
@@ -84,7 +98,9 @@ export class IncidentDetail {
    * Navigates to the corrective action form.
    */
   addCorrectiveAction() {
-    this.router.navigate(['incidents', this.incidentId(), 'corrective-actions', 'new']).then();
+    if (this.incident()?.status !== IncidentStatus.IN_REVIEW) return;
+
+    this.router.navigate(['incidents', this.incidentId(), 'corrective-actions', 'new']);
   }
 
   /**

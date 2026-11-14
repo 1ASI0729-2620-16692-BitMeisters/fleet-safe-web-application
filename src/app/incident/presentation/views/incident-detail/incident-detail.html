@@ -1,3 +1,7 @@
+@if (error()) {
+  <p class="error">{{ error() | translate }}</p>
+}
+
 @if (incident(); as incident) {
   <div class="detail-container">
     <div class="header">
@@ -42,6 +46,19 @@
         <mat-divider></mat-divider>
         <p class="description">{{ incident.description }}</p>
         @if (isOpen()) {
+          @if (incident.status === 'REGISTERED') {
+            <div class="resolve">
+              <button
+                mat-stroked-button
+                color="primary"
+                [disabled]="loading()"
+                (click)="moveToReview()"
+              >
+                {{ 'incident.move-to-review' | translate }}
+              </button>
+            </div>
+          }
+
           <div class="resolve">
             <mat-form-field>
               <mat-label>{{ 'incident.resolution.label' | translate }}</mat-label>
@@ -51,7 +68,12 @@
                 }
               </mat-select>
             </mat-form-field>
-            <button mat-flat-button color="primary" [disabled]="resolutionType.invalid" (click)="resolve()">
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="resolutionType.invalid || loading()"
+              (click)="resolve()"
+            >
               {{ 'incident.resolve' | translate }}
             </button>
           </div>
@@ -67,9 +89,11 @@
     <mat-card class="section-card">
       <mat-card-header>
         <mat-card-title>{{ 'incident.corrective-actions' | translate }}</mat-card-title>
-        <button mat-raised-button color="primary" (click)="addCorrectiveAction()">
-          {{ 'incident.add-corrective-action' | translate }}
-        </button>
+        @if (incident.status === 'IN_REVIEW') {
+          <button mat-raised-button color="primary" (click)="addCorrectiveAction()">
+            {{ 'incident.add-corrective-action' | translate }}
+          </button>
+        }
       </mat-card-header>
       <mat-card-content>
         @for (action of incident.correctiveActions; track action.id) {
@@ -89,7 +113,12 @@
     <mat-card class="section-card">
       <mat-card-header>
         <mat-card-title>{{ 'incident.repairs' | translate }}</mat-card-title>
-        <button mat-raised-button color="primary" (click)="scheduleRepair()">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="loading()"
+          (click)="scheduleRepair()"
+        >
           {{ 'incident.schedule-repair' | translate }}
         </button>
       </mat-card-header>
@@ -98,11 +127,18 @@
           <div class="list-item">
             <p>{{ repair.workshop }} · {{ repair.cost }}</p>
             <p class="meta">
-              {{ repair.startedAt | date: 'dd/MM/yyyy HH:mm' }} → {{ repair.finishedAt | date: 'dd/MM/yyyy HH:mm' }} ·
-              {{ 'incident.repair.status.' + repair.status | translate }}
+              {{ repair.startedAt | date: 'dd/MM/yyyy HH:mm' }}
+              @if (repair.finishedAt) {
+                → {{ repair.finishedAt | date: 'dd/MM/yyyy HH:mm' }}
+              }
+              · {{ 'incident.repair.status.' + repair.status | translate }}
             </p>
             @if (repair.status !== 'COMPLETED') {
-              <button mat-stroked-button (click)="completeRepair(repair.id)">
+              <button
+                mat-stroked-button
+                [disabled]="loading()"
+                (click)="completeRepair(repair.id)"
+              >
                 {{ 'incident.complete-repair' | translate }}
               </button>
             }
@@ -116,7 +152,12 @@
     <mat-card class="section-card">
       <mat-card-header>
         <mat-card-title>{{ 'incident.follow-ups' | translate }}</mat-card-title>
-        <button mat-raised-button color="primary" (click)="addFollowUp()">
+        <button
+          mat-raised-button
+          color="primary"
+          [disabled]="loading()"
+          (click)="addFollowUp()"
+        >
           {{ 'incident.add-follow-up' | translate }}
         </button>
       </mat-card-header>

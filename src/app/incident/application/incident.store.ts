@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { retry, concatMap, map, of } from 'rxjs';
+import { firstValueFrom, retry } from 'rxjs';
 import { IncidentApi } from '../infrastructure/incident-api';
 import { Incident } from '../domain/model/incident.entity';
 import { IncidentType } from '../domain/model/incident-type.entity';
@@ -56,10 +56,14 @@ export class IncidentStore {
   readonly incidentCount = computed(() => this.incidents().length);
 
   /**
-   * Computed signal for open incidents.
+   * Computed signal for unresolved incidents.
    */
   readonly openIncidents = computed(() =>
-    this.incidents().filter((i) => i.status === IncidentStatus.REGISTERED),
+    this.incidents().filter(
+      (incident) =>
+        incident.status === IncidentStatus.REGISTERED ||
+        incident.status === IncidentStatus.IN_REVIEW,
+    ),
   );
 
   /**
@@ -85,7 +89,7 @@ export class IncidentStore {
       .pipe(retry(2))
       .subscribe({
         next: (vehicles) => this.vehiclesSignal.set(vehicles),
-        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to load vehicles')),
+        error: (err) => this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed')),
       });
   };
 
@@ -97,23 +101,40 @@ export class IncidentStore {
       .pipe(retry(2))
       .subscribe({
         next: (inspections) => this.inspectionsOfVehicleSignal.set(inspections),
-        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to load inspections')),
+        error: (err) => this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed')),
       });
   };
 
-  private reloadIncident = (id: string): void => {
-    this.incidentApi.getIncident(id).subscribe({
-      next: (incident) => {
-        this.incidentsSignal.update((incidents) =>
-          incidents.map((i) => (i.id === incident.id ? incident : i)),
-        );
-        this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(this.formatError(err, 'Failed to reload incident'));
-        this.loadingSignal.set(false);
-      },
-    });
+  private reloadIncident = async (id: string): Promise<void> => {
+    try {
+      const incident = await firstValueFrom(this.incidentApi.getIncident(id));
+
+      this.incidentsSignal.update((incidents) =>
+        incidents.map((item) => (item.id === incident.id ? incident : item)),
+      );
+    } catch (error) {
+      this.errorSignal.set(this.formatError(error, 'incident.error.loadFailed'));
+    }
+  };
+
+  private executeWrite = async <T>(
+    operation: Promise<T>,
+    fallback: string,
+    onSuccess: (result: T) => void | Promise<void>,
+  ): Promise<boolean> => {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    try {
+      const result = await operation;
+      await onSuccess(result);
+      return true;
+    } catch (error) {
+      this.errorSignal.set(this.formatError(error, fallback));
+      return false;
+    } finally {
+      this.loadingSignal.set(false);
+    }
   };
 
   /**
@@ -147,7 +168,7 @@ export class IncidentStore {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load incidents'));
+          this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed'));
           this.loadingSignal.set(false);
         },
       });
@@ -168,7 +189,7 @@ export class IncidentStore {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load incident types'));
+          this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed'));
           this.loadingSignal.set(false);
         },
       });
@@ -176,175 +197,139 @@ export class IncidentStore {
 
   /**
    * Adds a new incident.
-   * @param incident - The incident to add.
    */
-  addIncident = (incident: Incident): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .createIncident(incident)
-      .pipe(retry(2))
-      .subscribe({
-        next: (created) => {
-          this.incidentsSignal.update((incidents) => [...incidents, created]);
-          this.loadingSignal.set(false);
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to create incident'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  addIncident = (incident: Incident): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.createIncident(incident)),
+      'incident.error.loadFailed',
+      (created) => {
+        this.incidentsSignal.update((incidents) => [...incidents, created]);
+      },
+    );
 
   /**
    * Updates an existing incident.
-   * @param incident - The incident to update.
    */
-  updateIncident = (incident: Incident): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .updateIncident(incident)
-      .pipe(retry(2))
-      .subscribe({
-        next: (updated) => {
-          this.incidentsSignal.update((incidents) =>
-            incidents.map((i) => (i.id === updated.id ? updated : i)),
-          );
-          this.loadingSignal.set(false);
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to update incident'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  updateIncident = (incident: Incident): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.updateIncident(incident)),
+      'incident.error.loadFailed',
+      (updated) => {
+        this.incidentsSignal.update((incidents) =>
+          incidents.map((item) => (item.id === updated.id ? updated : item)),
+        );
+      },
+    );
+
+  /**
+   * Moves an incident to the IN_REVIEW status.
+   */
+  updateIncidentStatus = (incidentId: string): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.updateIncidentStatus(incidentId)),
+      'incident.error.loadFailed',
+      (updated) => {
+        this.incidentsSignal.update((incidents) =>
+          incidents.map((item) => (item.id === updated.id ? updated : item)),
+        );
+      },
+    );
 
   /**
    * Deletes an incident by ID.
-   * @param id - The ID of the incident to delete.
    */
-  deleteIncident = (id: string): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .deleteIncident(id)
-      .pipe(retry(2))
-      .subscribe({
-        next: () => {
-          this.incidentsSignal.update((incidents) => incidents.filter((i) => i.id !== id));
-          this.loadingSignal.set(false);
-        },
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to delete incident'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  deleteIncident = (id: string): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.deleteIncident(id)),
+      'incident.error.loadFailed',
+      () => {
+        this.incidentsSignal.update((incidents) =>
+          incidents.filter((incident) => incident.id !== id),
+        );
+      },
+    );
 
   /**
    * Registers a corrective action for an incident.
-   * @param command - Corrective action command.
    */
-  registerCorrectiveAction = (command: RegisterCorrectiveActionCommand, evidence: File | null = null): void => {
+  registerCorrectiveAction = async (
+    command: RegisterCorrectiveActionCommand,
+    evidence: File | null = null,
+  ): Promise<boolean> => {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
-    this.incidentApi
-      .registerCorrectiveAction(command)
-      .pipe(
-        concatMap((action) =>
-          evidence
-            ? this.incidentApi
-                .attachCorrectiveActionEvidence(action.incidentId, action.id, evidence)
-                .pipe(map(() => action))
-            : of(action),
-        ),
-      )
-      .subscribe({
-        next: (action) => this.reloadIncident(action.incidentId),
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to register corrective action'));
-          this.loadingSignal.set(false);
-          this.reloadIncident(command.incidentId);
-        },
-      });
+
+    try {
+      const action = await firstValueFrom(this.incidentApi.registerCorrectiveAction(command));
+
+      if (evidence) {
+        try {
+          await firstValueFrom(
+            this.incidentApi.attachCorrectiveActionEvidence(action.incidentId, action.id, evidence),
+          );
+        } catch (error) {
+          this.errorSignal.set(this.formatError(error, 'incident.error.loadFailed'));
+        }
+      }
+
+      await this.reloadIncident(action.incidentId);
+
+      return true;
+    } catch (error) {
+      this.errorSignal.set(this.formatError(error, 'incident.error.loadFailed'));
+      return false;
+    } finally {
+      this.loadingSignal.set(false);
+    }
   };
 
   /**
    * Schedules a repair for an incident.
-   * @param command - Schedule repair command.
    */
-  scheduleRepair = (command: ScheduleRepairCommand): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .scheduleRepair(command)
-      .pipe(retry(2))
-      .subscribe({
-        next: (repair) => this.reloadIncident(repair.incidentId),
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to schedule repair'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  scheduleRepair = (command: ScheduleRepairCommand): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.scheduleRepair(command)),
+      'incident.error.loadFailed',
+      async (repair) => {
+        await this.reloadIncident(repair.incidentId);
+      },
+    );
 
   /**
    * Completes a repair for an incident.
-   * @param command - Complete repair command.
    */
-  completeRepair = (command: CompleteRepairCommand): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .completeRepair(command)
-      .pipe(retry(2))
-      .subscribe({
-        next: (updatedRepair) => this.reloadIncident(updatedRepair.incidentId),
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to complete repair'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  completeRepair = (command: CompleteRepairCommand): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.completeRepair(command)),
+      'incident.error.loadFailed',
+      async (repair) => {
+        await this.reloadIncident(repair.incidentId);
+      },
+    );
 
   /**
    * Adds a follow-up note to an incident.
-   * @param command - Add incident follow-up command.
    */
-  addIncidentFollowUp = (command: AddIncidentFollowUpCommand): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .addIncidentFollowUp(command)
-      .pipe(retry(2))
-      .subscribe({
-        next: (followUp) => this.reloadIncident(followUp.incidentId),
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to add incident follow-up'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  addIncidentFollowUp = (command: AddIncidentFollowUpCommand): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.addIncidentFollowUp(command)),
+      'incident.error.loadFailed',
+      async (followUp) => {
+        await this.reloadIncident(followUp.incidentId);
+      },
+    );
 
   /**
    * Resolves an incident.
-   * @param command - Resolve incident command.
    */
-  resolveIncident = (command: ResolveIncidentCommand): void => {
-    this.loadingSignal.set(true);
-    this.errorSignal.set(null);
-    this.incidentApi
-      .resolveIncident(command)
-      .pipe(retry(2))
-      .subscribe({
-        next: (updated) => this.reloadIncident(updated.id),
-        error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to resolve incident'));
-          this.loadingSignal.set(false);
-        },
-      });
-  };
+  resolveIncident = (command: ResolveIncidentCommand): Promise<boolean> =>
+    this.executeWrite(
+      firstValueFrom(this.incidentApi.resolveIncident(command)),
+      'incident.error.loadFailed',
+      async (updated) => {
+        await this.reloadIncident(updated.id);
+      },
+    );
 
   /**
    * Normalizes unknown errors into a display-friendly message.
@@ -352,10 +337,13 @@ export class IncidentStore {
    * @param fallback - Default message when details are unavailable.
    * @returns Normalized message.
    */
-  private formatError = (error: unknown, _fallback: string): string => {
-    if (error instanceof Error && error.message.includes('Resource not found')) {
+  private formatError = (error: unknown, fallback: string): string => {
+    const message = error instanceof Error ? error.message : '';
+
+    if (message.includes('Resource not found')) {
       return 'incident.error.notFound';
     }
-    return 'incident.error.loadFailed';
+
+    return fallback;
   };
 }

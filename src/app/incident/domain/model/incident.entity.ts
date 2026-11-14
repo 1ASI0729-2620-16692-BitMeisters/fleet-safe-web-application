@@ -21,8 +21,8 @@ export class Incident implements BaseEntity {
   #reportedBy: string;
   #reportedByName: string;
   #reportedAt: string;
-  #resolutionType: string;
-  #resolvedAt: string;
+  #resolutionType: string | null;
+  #resolvedAt: string | null;
   #createdAt: string;
   #updatedAt: string;
   #correctiveActions: CorrectiveAction[];
@@ -41,8 +41,8 @@ export class Incident implements BaseEntity {
     reportedBy: string;
     reportedByName?: string;
     reportedAt: string;
-    resolutionType?: string;
-    resolvedAt?: string;
+    resolutionType?: string | null;
+    resolvedAt?: string | null;
     createdAt?: string;
     updatedAt?: string;
     correctiveActions?: CorrectiveAction[];
@@ -60,8 +60,8 @@ export class Incident implements BaseEntity {
     this.#reportedBy = props.reportedBy;
     this.#reportedByName = props.reportedByName ?? '';
     this.#reportedAt = props.reportedAt;
-    this.#resolutionType = props.resolutionType ?? '';
-    this.#resolvedAt = props.resolvedAt ?? '';
+    this.#resolutionType = props.resolutionType ?? null;
+    this.#resolvedAt = props.resolvedAt ?? null;
     this.#createdAt = props.createdAt ?? '';
     this.#updatedAt = props.updatedAt ?? '';
     this.#correctiveActions = props.correctiveActions ?? [];
@@ -143,17 +143,19 @@ export class Incident implements BaseEntity {
     this.#reportedAt = value;
   }
 
-  get resolutionType(): string {
+  get resolutionType(): string | null {
     return this.#resolutionType;
   }
-  set resolutionType(value: string) {
+
+  set resolutionType(value: string | null) {
     this.#resolutionType = value;
   }
 
-  get resolvedAt(): string {
+  get resolvedAt(): string | null {
     return this.#resolvedAt;
   }
-  set resolvedAt(value: string) {
+
+  set resolvedAt(value: string | null) {
     this.#resolvedAt = value;
   }
 

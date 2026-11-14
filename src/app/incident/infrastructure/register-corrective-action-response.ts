@@ -9,7 +9,7 @@ export interface RegisterCorrectiveActionResource extends BaseResource {
   description: string;
   performedBy: string;
   performedAt: string;
-  evidenceUrl: string;
+  evidenceUrl: string | null;
 }
 
 /**
