@@ -89,7 +89,7 @@ export class IncidentStore {
       .pipe(retry(2))
       .subscribe({
         next: (vehicles) => this.vehiclesSignal.set(vehicles),
-        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to load vehicles')),
+        error: (err) => this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed')),
       });
   };
 
@@ -101,7 +101,7 @@ export class IncidentStore {
       .pipe(retry(2))
       .subscribe({
         next: (inspections) => this.inspectionsOfVehicleSignal.set(inspections),
-        error: (err) => this.errorSignal.set(this.formatError(err, 'Failed to load inspections')),
+        error: (err) => this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed')),
       });
   };
 
@@ -168,7 +168,7 @@ export class IncidentStore {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load incidents'));
+          this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed'));
           this.loadingSignal.set(false);
         },
       });
@@ -189,7 +189,7 @@ export class IncidentStore {
           this.loadingSignal.set(false);
         },
         error: (err) => {
-          this.errorSignal.set(this.formatError(err, 'Failed to load incident types'));
+          this.errorSignal.set(this.formatError(err, 'incident.error.loadFailed'));
           this.loadingSignal.set(false);
         },
       });
