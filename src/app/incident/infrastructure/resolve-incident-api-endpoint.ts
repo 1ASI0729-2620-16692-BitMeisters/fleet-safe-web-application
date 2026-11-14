@@ -32,7 +32,7 @@ export class ResolveIncidentApiEndpoint extends ErrorHandlingEnabledBaseType {
    */
   resolveIncident = (command: ResolveIncidentCommand): Observable<Incident> => {
     const request = this.assembler.toRequestFromCommand(command);
-    const url = `${resolveIncidentApiEndpointUrl}/${command.incidentId}/resolve`;
+    const url = `${resolveIncidentApiEndpointUrl}/${command.incidentId}`;
     return this.http.patch<ResolveIncidentResponse>(url, request).pipe(
       map((response) =>
         this.assembler.toEntityFromResource(this.assembler.toResourceFromResponse(response)),
