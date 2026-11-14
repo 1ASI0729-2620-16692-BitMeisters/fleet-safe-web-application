@@ -25,12 +25,10 @@ export class CompleteRepairAssembler {
   /**
    * Converts a complete repair command into the request payload.
    */
-  toRequestFromCommand = (command: CompleteRepairCommand): CompleteRepairRequest =>
-    ({
-      incidentId: command.incidentId,
-      repairId: command.repairId,
-      finishedAt: command.finishedAt,
-    }) as CompleteRepairRequest;
+  toRequestFromCommand = (command: CompleteRepairCommand): CompleteRepairRequest => ({
+    status: 'COMPLETED',
+    finishedAt: command.finishedAt,
+  });
 
   /**
    * Converts a response resource into a Repair entity.

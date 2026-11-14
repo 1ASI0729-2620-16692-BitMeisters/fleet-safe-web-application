@@ -1,5 +1,5 @@
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable } from 'rxjs';
 import { RegisterCorrectiveActionAssembler } from './register-corrective-action-assembler';
 import { RegisterCorrectiveActionCommand } from '../domain/model/register-corrective-action.command';
@@ -46,10 +46,19 @@ export class RegisterCorrectiveActionApiEndpoint extends ErrorHandlingEnabledBas
     );
   };
 
-  attachEvidence = (incidentId: string, correctiveActionId: string, file: File): Observable<unknown> => {
+  attachEvidence = (
+    incidentId: string,
+    correctiveActionId: string,
+    file: File,
+  ): Observable<unknown> => {
     const form = new FormData();
     form.append('file', file);
-    const url = `${registerCorrectiveActionApiEndpointUrl}/${incidentId}/corrective-actions/${correctiveActionId}/evidence`;
-    return this.http.post(url, form).pipe(catchError(this.handleError('Failed to attach the evidence')));
+
+    const params = new HttpParams().set('correctiveActionId', correctiveActionId);
+    const url = `${registerCorrectiveActionApiEndpointUrl}/${incidentId}/evidences`;
+
+    return this.http
+      .post(url, form, { params })
+      .pipe(catchError(this.handleError('Failed to attach the evidence')));
   };
 }

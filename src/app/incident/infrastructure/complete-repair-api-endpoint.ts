@@ -32,7 +32,7 @@ export class CompleteRepairApiEndpoint extends ErrorHandlingEnabledBaseType {
    */
   completeRepair = (command: CompleteRepairCommand): Observable<Repair> => {
     const request = this.assembler.toRequestFromCommand(command);
-    const url = `${completeRepairApiEndpointUrl}/${command.incidentId}/repairs/${command.repairId}/complete`;
+    const url = `${completeRepairApiEndpointUrl}/${command.incidentId}/repairs/${command.repairId}`;
     return this.http.patch<CompleteRepairResponse>(url, request).pipe(
       map((response) =>
         this.assembler.toEntityFromResource(this.assembler.toResourceFromResponse(response)),

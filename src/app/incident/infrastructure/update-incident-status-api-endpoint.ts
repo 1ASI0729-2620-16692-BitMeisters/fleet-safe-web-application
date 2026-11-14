@@ -23,11 +23,10 @@ export class UpdateIncidentStatusApiEndpoint extends ErrorHandlingEnabledBaseTyp
 
   updateIncidentStatus = (incidentId: string): Observable<Incident> => {
     const request: UpdateIncidentStatusRequest = {
-      incidentId,
       status: 'IN_REVIEW',
     };
 
-    const url = `${updateIncidentStatusApiEndpointUrl}/${incidentId}/status`;
+    const url = `${updateIncidentStatusApiEndpointUrl}/${incidentId}`;
 
     return this.http.patch<IncidentResource>(url, request).pipe(
       map((response) => this.assembler.toEntityFromResource(response)),

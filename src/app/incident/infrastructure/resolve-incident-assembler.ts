@@ -34,12 +34,11 @@ export class ResolveIncidentAssembler {
   /**
    * Converts a resolve incident command into the request payload.
    */
-  toRequestFromCommand = (command: ResolveIncidentCommand): ResolveIncidentRequest =>
-    ({
-      incidentId: command.incidentId,
-      resolutionType: command.resolutionType,
-      resolvedAt: command.resolvedAt,
-    }) as ResolveIncidentRequest;
+  toRequestFromCommand = (command: ResolveIncidentCommand): ResolveIncidentRequest => ({
+    status: 'RESOLVED',
+    resolutionType: command.resolutionType,
+    resolvedAt: command.resolvedAt,
+  });
 
   /**
    * Converts a response resource into an Incident entity.

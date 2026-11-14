@@ -127,11 +127,6 @@ export class IncidentApi extends BaseApi {
   updateIncidentType = (incidentType: IncidentType): Observable<IncidentType> =>
     this.incidentTypesEndpoint.update(incidentType, incidentType.id);
 
-  /**
-   * Deletes an incident type by ID.
-   */
-  deleteIncidentType = (id: string): Observable<void> => this.incidentTypesEndpoint.delete(id);
-
   // ── Corrective Actions ─────────────────────────────────────
 
   /**
