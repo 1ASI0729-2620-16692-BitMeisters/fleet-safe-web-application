@@ -29,7 +29,46 @@
   },
   "home": {
     "title": "Bienvenido a FleetSafe",
-    "content": "Plataforma de gestión de flotas y seguridad del transporte."
+    "content": "Plataforma de gestión de flotas y seguridad del transporte.",
+    "dashboard": {
+      "loading": "Cargando información del dashboard...",
+      "partialError": "No se pudieron cargar algunos datos. La información mostrada podría estar incompleta.",
+      "enabledVehicles": "Vehículos habilitados",
+      "enabledDescription": "Vehículos autorizados para operar",
+      "openIncidents": "Incidencias abiertas",
+      "openDescription": "Incidencias registradas o en revisión",
+      "criticalIncidents": "Incidencias críticas",
+      "criticalDescription": "Incidencias críticas pendientes",
+      "totalInspections": "Total de inspecciones",
+      "inspectionsDescription": "Inspecciones registradas",
+      "fleetStatus": "Estado de la flota",
+      "fleetStatusDescription": "Distribución de vehículos según su estado operacional",
+      "viewEvaluation": "Ver evaluación",
+      "recentInspections": "Últimas inspecciones",
+      "recentInspectionsDescription": "Actividad reciente de inspección",
+      "newInspection": "Nueva inspección",
+      "noInspections": "No hay inspecciones registradas.",
+      "pendingIncidents": "Incidencias pendientes",
+      "pendingIncidentsDescription": "Incidencias que requieren seguimiento",
+      "viewAll": "Ver todas",
+      "noIncidents": "No hay incidencias pendientes.",
+      "vehicleStatus": {
+        "ENABLED": "Habilitados",
+        "OBSERVED": "Observados",
+        "NOT_ENABLED": "No habilitados",
+        "NOT_INSPECTED": "Sin inspeccionar"
+      },
+      "inspectionStatus": {
+        "IN_PROGRESS": "En progreso",
+        "COMPLETED": "Completada"
+      },
+      "severity": {
+        "LOW": "Baja",
+        "MEDIUM": "Media",
+        "HIGH": "Alta",
+        "CRITICAL": "Crítica"
+      }
+    }
   },
   "footer": {
     "rights": "Todos los derechos reservados.",
