@@ -506,7 +506,8 @@
       "editVehicle": "Actualizar vehículo",
       "vehicleDetail": "Detalle del vehículo",
       "drivers": "Conductores",
-      "assignments": "Asignaciones de vehículos"
+      "assignments": "Asignaciones de vehículos",
+      "newDriver": "Registrar conductor"
     },
     "states": {
       "loading": "Cargando…",
@@ -565,7 +566,9 @@
       "plateTaken": "Esta placa ya está registrada.",
       "yearRange": "Ingresa un año entre {{min}} y {{max}}.",
       "positive": "Ingresa un valor mayor que 0.",
-      "maxLength": "Usa como máximo {{max}} caracteres."
+      "maxLength": "Usa como máximo {{max}} caracteres.",
+      "userIdFormat": "Ingresa el identificador de la cuenta de usuario, como 2c3d4e5f-6a7b-4c8d-9e0f-1a2b3c4d5e6f.",
+      "driverTaken": "Esta cuenta de usuario ya está registrada como conductor."
     },
     "drivers": {
       "title": "Conductores",
@@ -578,7 +581,12 @@
       "expired": "Vencida",
       "assignedVehicle": "Vehículo asignado",
       "noVehicle": "Sin vehículo",
-      "empty": "Aún no hay conductores registrados."
+      "empty": "Aún no hay conductores registrados.",
+      "new": "Registrar conductor",
+      "newTitle": "Registrar conductor",
+      "userIdHint": "Identificador de la cuenta de usuario creada en Identidad y Acceso.",
+      "create": "Registrar conductor",
+      "saving": "Registrando…"
     },
     "assignments": {
       "title": "Asignaciones de vehículos",
@@ -637,7 +645,8 @@
       "vehicleUpdated": "Vehículo {{plate}} actualizado.",
       "vehicleDeleted": "Vehículo eliminado.",
       "vehicleAssigned": "Vehículo asignado. El conductor ya puede inspeccionarlo.",
-      "assignmentEnded": "Asignación finalizada."
+      "assignmentEnded": "Asignación finalizada.",
+      "driverRegistered": "Conductor {{license}} registrado."
     },
     "errors": {
       "loadFailed": "No se pudo cargar la Gestión de Flota. Revisa tu conexión e inténtalo de nuevo.",
@@ -656,7 +665,12 @@
         "VEHICLE_ALREADY_ASSIGNED": "El vehículo ya está asignado a un conductor.",
         "DRIVER_LICENSE_EXPIRED": "La licencia del conductor está vencida.",
         "DRIVER_ALREADY_ASSIGNED": "El conductor ya tiene un vehículo asignado."
-      }
+      },
+      "invalidDriver": "Ingresa un identificador de usuario válido, un número de licencia de hasta 20 caracteres y su fecha de vencimiento.",
+      "driverAlreadyRegistered": "Esta cuenta de usuario ya está registrada como conductor.",
+      "driverUserNotFound": "La cuenta de usuario no existe.",
+      "notAllowed": "Solo un supervisor de flota o un administrador puede hacer esto.",
+      "assignmentOutdated": "El vehículo, el conductor o la asignación cambiaron mientras tanto. Se actualizaron los datos; revísalos e inténtalo de nuevo."
     }
   },
   "documents": {

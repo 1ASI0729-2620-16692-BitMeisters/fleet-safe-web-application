@@ -506,7 +506,8 @@
       "editVehicle": "Update vehicle",
       "vehicleDetail": "Vehicle details",
       "drivers": "Drivers",
-      "assignments": "Vehicle assignments"
+      "assignments": "Vehicle assignments",
+      "newDriver": "Register driver"
     },
     "states": {
       "loading": "Loading…",
@@ -565,7 +566,9 @@
       "plateTaken": "This plate is already registered.",
       "yearRange": "Enter a year between {{min}} and {{max}}.",
       "positive": "Enter a value greater than 0.",
-      "maxLength": "Use at most {{max}} characters."
+      "maxLength": "Use at most {{max}} characters.",
+      "userIdFormat": "Enter the identifier of the user account, like 2c3d4e5f-6a7b-4c8d-9e0f-1a2b3c4d5e6f.",
+      "driverTaken": "This user account is already registered as a driver."
     },
     "drivers": {
       "title": "Drivers",
@@ -578,7 +581,12 @@
       "expired": "Expired",
       "assignedVehicle": "Assigned vehicle",
       "noVehicle": "No vehicle",
-      "empty": "No drivers are registered yet."
+      "empty": "No drivers are registered yet.",
+      "new": "Register driver",
+      "newTitle": "Register driver",
+      "userIdHint": "Identifier of the user account created in Identity and Access.",
+      "create": "Register driver",
+      "saving": "Registering…"
     },
     "assignments": {
       "title": "Vehicle assignments",
@@ -637,7 +645,8 @@
       "vehicleUpdated": "Vehicle {{plate}} updated.",
       "vehicleDeleted": "Vehicle removed.",
       "vehicleAssigned": "Vehicle assigned. The driver can now inspect it.",
-      "assignmentEnded": "Assignment ended."
+      "assignmentEnded": "Assignment ended.",
+      "driverRegistered": "Driver {{license}} registered."
     },
     "errors": {
       "loadFailed": "Could not load Fleet Management. Check your connection and try again.",
@@ -656,7 +665,12 @@
         "VEHICLE_ALREADY_ASSIGNED": "The vehicle is already assigned to a driver.",
         "DRIVER_LICENSE_EXPIRED": "The driver's license has expired.",
         "DRIVER_ALREADY_ASSIGNED": "The driver already has an assigned vehicle."
-      }
+      },
+      "invalidDriver": "Enter a valid user identifier, a license number of up to 20 characters and its expiration date.",
+      "driverAlreadyRegistered": "This user account is already registered as a driver.",
+      "driverUserNotFound": "The user account does not exist.",
+      "notAllowed": "Only a fleet supervisor or an administrator can do this.",
+      "assignmentOutdated": "The vehicle, the driver or the assignment changed in the meantime. The data was refreshed; review it and try again."
     }
   },
   "documents": {

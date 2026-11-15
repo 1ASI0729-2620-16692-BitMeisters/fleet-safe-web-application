@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, computed, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -25,6 +26,7 @@ interface DriverRow {
   selector: 'app-driver-list',
   imports: [
     DatePipe,
+    RouterLink,
     TranslatePipe,
     MatButtonModule,
     MatIconModule,

@@ -1,0 +1,90 @@
+<section class="driver-form" aria-labelledby="driver-form-title">
+
+  <header class="heading">
+    <a
+      mat-icon-button
+      routerLink="/fleet/drivers"
+      [attr.aria-label]="'fleet.actions.back' | translate">
+      <mat-icon>arrow_back</mat-icon>
+    </a>
+
+    <h1 id="driver-form-title">{{ 'fleet.drivers.newTitle' | translate }}</h1>
+  </header>
+
+  @if (store.error(); as errorKey) {
+    <div class="state state-error" role="alert">
+      <mat-icon aria-hidden="true">cloud_off</mat-icon>
+      <span>{{ errorKey | translate }}</span>
+      <button mat-stroked-button type="button" (click)="store.load()">
+        <mat-icon>refresh</mat-icon>
+        {{ 'fleet.states.retry' | translate }}
+      </button>
+    </div>
+  } @else if (!store.loaded()) {
+    <div class="state" role="status" aria-live="polite">
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="40"
+        [attr.aria-label]="'fleet.states.loading' | translate"
+      />
+    </div>
+  } @else {
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>{{ 'fleet.drivers.userId' | translate }}</mat-label>
+        <input matInput formControlName="userId" autocomplete="off" spellcheck="false" required />
+        <mat-hint>{{ 'fleet.drivers.userIdHint' | translate }}</mat-hint>
+        @if (form.controls.userId.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.userId.hasError('userIdFormat')) {
+          <mat-error>{{ 'fleet.validation.userIdFormat' | translate }}</mat-error>
+        } @else if (form.controls.userId.hasError('driverTaken')) {
+          <mat-error>{{ 'fleet.validation.driverTaken' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.drivers.licenseNumber' | translate }}</mat-label>
+        <input
+          matInput
+          formControlName="licenseNumber"
+          autocomplete="off"
+          [attr.maxlength]="licenseMaxLength"
+          required />
+        @if (form.controls.licenseNumber.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        } @else if (form.controls.licenseNumber.hasError('maxlength')) {
+          <mat-error>{{ 'fleet.validation.maxLength' | translate: { max: licenseMaxLength } }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'fleet.drivers.licenseExpirationDate' | translate }}</mat-label>
+        <input matInput type="date" formControlName="licenseExpirationDate" required />
+        @if (form.controls.licenseExpirationDate.hasError('required')) {
+          <mat-error>{{ 'fleet.validation.required' | translate }}</mat-error>
+        }
+      </mat-form-field>
+
+      @if (store.actionError(); as errorKey) {
+        <p class="form-error full-width" role="alert">
+          <mat-icon aria-hidden="true">error</mat-icon>
+          {{ errorKey | translate }}
+        </p>
+      }
+
+      <div class="actions full-width">
+        <a mat-stroked-button routerLink="/fleet/drivers">
+          {{ 'fleet.actions.cancel' | translate }}
+        </a>
+
+        <button mat-flat-button type="submit" [disabled]="store.saving()">
+          {{ (store.saving() ? 'fleet.drivers.saving' : 'fleet.drivers.create') | translate }}
+        </button>
+      </div>
+
+    </form>
+  }
+</section>
