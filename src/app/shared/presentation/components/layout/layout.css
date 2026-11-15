@@ -239,6 +239,8 @@
 
 .topbar {
   height: 72px;
+  min-height: 72px;
+  flex-shrink: 0;
   padding: 0 28px;
   background-color: var(--fs-surface);
   color: var(--fs-primary-900);
@@ -326,6 +328,8 @@
 
   .topbar {
     height: 64px;
+    min-height: 64px;
+    flex-shrink: 0;
     padding: 0 8px 0 4px;
   }
 
