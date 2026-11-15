@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- A supervisor or an administrator registers the license of a user account as a driver of the company.
+
+### Changed
+- Drivers and vehicle assignments are served by the platform backend instead of the mock api. A vehicle is handed to a driver by sending both identifiers, and an assignment is ended through the backend, which sets its dates.
+- When the backend refuses an assignment because the data changed in the meantime, the lists are loaded again.
+
 ## [0.6.1] - 2026-11-12
 
 ### Fixed
