@@ -29,24 +29,43 @@ export class InspectionApi extends BaseApi {
 
   getInspectionItems = (): Observable<InspectionItem[]> => this.inspectionItemsEndpoint.getAll();
 
+  getInspections = (): Observable<Inspection[]> => this.inspectionsEndpoint.getAll();
+
   getInspection = (id: string): Observable<Inspection> => this.inspectionsEndpoint.getById(id);
 
   createInspection = (inspection: Inspection): Observable<Inspection> =>
     this.inspectionsEndpoint.create(inspection);
 
-  registerResult = (inspectionId: string, inspectionItemId: string, result: ResultValue): Observable<InspectionResultEntry> =>
+  registerResult = (
+    inspectionId: string,
+    inspectionItemId: string,
+    result: ResultValue,
+  ): Observable<InspectionResultEntry> =>
     this.inspectionsEndpoint.registerResult(inspectionId, inspectionItemId, result);
 
-  updateResult = (inspectionId: string, resultId: string, result: ResultValue): Observable<InspectionResultEntry> =>
+  updateResult = (
+    inspectionId: string,
+    resultId: string,
+    result: ResultValue,
+  ): Observable<InspectionResultEntry> =>
     this.inspectionsEndpoint.updateResult(inspectionId, resultId, result);
 
-  addObservation = (inspectionId: string, resultId: string, description: string): Observable<Observation> =>
+  addObservation = (
+    inspectionId: string,
+    resultId: string,
+    description: string,
+  ): Observable<Observation> =>
     this.inspectionsEndpoint.addObservation(inspectionId, resultId, description);
 
-  attachEvidence = (inspectionId: string, observationId: string, photo: File): Observable<Evidence> =>
+  attachEvidence = (
+    inspectionId: string,
+    observationId: string,
+    photo: File,
+  ): Observable<Evidence> =>
     this.inspectionsEndpoint.attachEvidence(inspectionId, observationId, photo);
 
-  completeInspection = (inspectionId: string): Observable<Inspection> => this.inspectionsEndpoint.complete(inspectionId);
+  completeInspection = (inspectionId: string): Observable<Inspection> =>
+    this.inspectionsEndpoint.complete(inspectionId);
 
   getVehicleStatus = (vehicleId: string): Observable<VehicleOperationalStatus> =>
     this.vehicleStatusEndpoint.getStatus(vehicleId);
