@@ -8,7 +8,9 @@ export const environment = {
   backendUsersEndpointPath: '/users',
   backendVehiclesEndpointPath: '/vehicles',
   backendCompaniesEndpointPath: '/companies',
+  backendDriversEndpointPath: '/drivers',
   backendFleetsEndpointPath: '/fleets',
+  backendVehicleAssignmentsEndpointPath: '/vehicle-assignments',
   backendIncidentsEndpointPath: '/incidents',
   backendIncidentTypesEndpointPath: '/incident-types',
   backendDocumentsEndpointPath: '/documents',
@@ -18,6 +20,4 @@ export const environment = {
   backendOperationalStatusesEndpointPath: '/operational-statuses',
   platformProviderVehicleAssignmentEndpointPath: '/drivers/me/vehicle-assignment',
   platformProviderVehiclesEndpointPath: '/vehicles',
-  platformProviderDriversEndpointPath: '/drivers',
-  platformProviderVehicleAssignmentsEndpointPath: '/vehicle-assignments',
 };

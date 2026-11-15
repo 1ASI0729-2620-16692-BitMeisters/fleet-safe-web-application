@@ -8,6 +8,8 @@ import { Company } from '../domain/model/company.entity';
 import { Fleet } from '../domain/model/fleet.entity';
 import { Vehicle } from '../domain/model/vehicle.entity';
 import { Driver } from '../domain/model/driver.entity';
+import { AssignVehicleCommand } from '../domain/model/assign-vehicle.command';
+import { RegisterDriverCommand } from '../domain/model/register-driver.command';
 import { VehicleAssignment } from '../domain/model/vehicle-assignment.entity';
 import { VehicleInspectionSummary } from '../domain/model/vehicle-inspection-summary.entity';
 
@@ -59,16 +61,20 @@ export class FleetApi extends BaseApi {
     return this.driversEndpoint.getAll();
   }
 
+  registerDriver(command: RegisterDriverCommand): Observable<Driver> {
+    return this.driversEndpoint.register(command);
+  }
+
   getVehicleAssignments(): Observable<VehicleAssignment[]> {
     return this.assignmentsEndpoint.getAll();
   }
 
-  createVehicleAssignment(assignment: VehicleAssignment): Observable<VehicleAssignment> {
-    return this.assignmentsEndpoint.create(assignment);
+  assignVehicle(command: AssignVehicleCommand): Observable<VehicleAssignment> {
+    return this.assignmentsEndpoint.assign(command);
   }
 
-  updateVehicleAssignment(assignment: VehicleAssignment): Observable<VehicleAssignment> {
-    return this.assignmentsEndpoint.update(assignment, assignment.id);
+  closeVehicleAssignment(assignmentId: string): Observable<VehicleAssignment> {
+    return this.assignmentsEndpoint.close(assignmentId);
   }
 
   getVehicleInspections(vehicleId: string): Observable<VehicleInspectionSummary[]> {
