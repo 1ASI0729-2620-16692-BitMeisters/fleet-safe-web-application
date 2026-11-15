@@ -1,4 +1,136 @@
-<div class="container-with-spacing">
-  <h1>{{ 'home.title' | translate }}</h1>
-  <p>{{ 'home.content' | translate }}</p>
+<div class="dashboard container-with-spacing">
+  <header class="dashboard-header">
+    <div>
+      <h1>{{ 'home.title' | translate }}</h1>
+      <p>{{ 'home.content' | translate }}</p>
+    </div>
+  </header>
+
+  @if (loading()) {
+    <div class="dashboard-message">
+      {{ 'home.dashboard.loading' | translate }}
+    </div>
+  } @else {
+    @if (error()) {
+      <div class="dashboard-alert">
+        {{ 'home.dashboard.partialError' | translate }}
+      </div>
+    }
+
+    <section class="metrics-grid">
+      <article class="metric-card">
+        <span class="metric-label">{{ 'home.dashboard.enabledVehicles' | translate }}</span>
+        <strong class="metric-value">{{ enabledVehicles() }}</strong>
+        <span class="metric-description">{{ 'home.dashboard.enabledDescription' | translate }}</span>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-label">{{ 'home.dashboard.openIncidents' | translate }}</span>
+        <strong class="metric-value">{{ openIncidents().length }}</strong>
+        <span class="metric-description">{{ 'home.dashboard.openDescription' | translate }}</span>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-label">{{ 'home.dashboard.criticalIncidents' | translate }}</span>
+        <strong class="metric-value critical-value">{{ criticalIncidents() }}</strong>
+        <span class="metric-description">{{ 'home.dashboard.criticalDescription' | translate }}</span>
+      </article>
+
+      <article class="metric-card">
+        <span class="metric-label">{{ 'home.dashboard.totalInspections' | translate }}</span>
+        <strong class="metric-value">{{ inspections().length }}</strong>
+        <span class="metric-description">{{ 'home.dashboard.inspectionsDescription' | translate }}</span>
+      </article>
+    </section>
+
+    <section class="dashboard-section">
+      <div class="section-heading">
+        <div>
+          <h2>{{ 'home.dashboard.fleetStatus' | translate }}</h2>
+          <p>{{ 'home.dashboard.fleetStatusDescription' | translate }}</p>
+        </div>
+        <a routerLink="/evaluation">{{ 'home.dashboard.viewEvaluation' | translate }}</a>
+      </div>
+
+      <div class="status-grid">
+        <article class="status-card enabled">
+          <span>{{ 'home.dashboard.vehicleStatus.ENABLED' | translate }}</span>
+          <strong>{{ vehicleCounts().ENABLED }}</strong>
+        </article>
+
+        <article class="status-card observed">
+          <span>{{ 'home.dashboard.vehicleStatus.OBSERVED' | translate }}</span>
+          <strong>{{ vehicleCounts().OBSERVED }}</strong>
+        </article>
+
+        <article class="status-card not-enabled">
+          <span>{{ 'home.dashboard.vehicleStatus.NOT_ENABLED' | translate }}</span>
+          <strong>{{ vehicleCounts().NOT_ENABLED }}</strong>
+        </article>
+
+        <article class="status-card not-inspected">
+          <span>{{ 'home.dashboard.vehicleStatus.NOT_INSPECTED' | translate }}</span>
+          <strong>{{ vehicleCounts().NOT_INSPECTED }}</strong>
+        </article>
+      </div>
+    </section>
+
+    <div class="dashboard-columns">
+      <section class="dashboard-section">
+        <div class="section-heading">
+          <div>
+            <h2>{{ 'home.dashboard.recentInspections' | translate }}</h2>
+            <p>{{ 'home.dashboard.recentInspectionsDescription' | translate }}</p>
+          </div>
+          <a routerLink="/inspections/new">{{ 'home.dashboard.newInspection' | translate }}</a>
+        </div>
+
+        @if (recentInspections().length === 0) {
+          <p class="empty-state">{{ 'home.dashboard.noInspections' | translate }}</p>
+        } @else {
+          <div class="data-list">
+            @for (inspection of recentInspections(); track inspection.id) {
+              <a class="data-item" [routerLink]="['/inspections', inspection.id, 'summary']">
+                <div class="data-item-main">
+                  <strong>{{ inspection.vehicleId }}</strong>
+                  <span>{{ inspection.startedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <span class="status-pill" [class.completed]="inspection.status === 'COMPLETED'">
+                  {{ ('home.dashboard.inspectionStatus.' + inspection.status) | translate }}
+                </span>
+              </a>
+            }
+          </div>
+        }
+      </section>
+
+      <section class="dashboard-section">
+        <div class="section-heading">
+          <div>
+            <h2>{{ 'home.dashboard.pendingIncidents' | translate }}</h2>
+            <p>{{ 'home.dashboard.pendingIncidentsDescription' | translate }}</p>
+          </div>
+          <a routerLink="/incidents">{{ 'home.dashboard.viewAll' | translate }}</a>
+        </div>
+
+        @if (pendingIncidents().length === 0) {
+          <p class="empty-state">{{ 'home.dashboard.noIncidents' | translate }}</p>
+        } @else {
+          <div class="data-list">
+            @for (incident of pendingIncidents(); track incident.id) {
+              <a class="data-item" [routerLink]="['/incidents', incident.id]">
+                <div class="data-item-main">
+                  <strong>{{ incident.description }}</strong>
+                  <span>{{ incident.reportedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <span class="status-pill" [class.critical]="incident.severity === 'CRITICAL'">
+                  {{ ('home.dashboard.severity.' + incident.severity) | translate }}
+                </span>
+              </a>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  }
 </div>
