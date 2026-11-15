@@ -54,12 +54,15 @@ export class Layout {
    */
   private readonly iamStore = inject(IamStore);
 
-  private readonly allOptions = signal<{ link: string; label: string; icon: string; category: string; roles?: Role[] }[]>([
+  private readonly allOptions = signal<
+    { link: string; label: string; icon: string; category: string; roles?: Role[] }[]
+  >([
     {
       link: '/home',
       label: 'layout.dashboard',
       icon: 'dashboard',
       category: 'core',
+      roles: [Role.ADMINISTRATOR, Role.FLEET_SUPERVISOR],
     },
     {
       link: '/incidents',
