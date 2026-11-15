@@ -4,20 +4,24 @@ import { forkJoin, Observable, retry } from 'rxjs';
 import { Notifier } from '../../shared/application/notifier';
 
 import { FleetApi } from '../infrastructure/fleet-api';
+import { FleetRequestError } from '../infrastructure/fleet-request-error';
 
 import { AssignVehicleCommand } from '../domain/model/assign-vehicle.command';
 import { Company } from '../domain/model/company.entity';
 import { Driver } from '../domain/model/driver.entity';
 import { EndVehicleAssignmentCommand } from '../domain/model/end-vehicle-assignment.command';
 import { Fleet } from '../domain/model/fleet.entity';
-import { localDate } from '../domain/model/local-date';
+import { RegisterDriverCommand } from '../domain/model/register-driver.command';
 import { RegisterVehicleCommand } from '../domain/model/register-vehicle.command';
 import { UpdateVehicleCommand } from '../domain/model/update-vehicle.command';
-import { VehicleAssignment } from '../domain/model/vehicle-assignment.entity';
+import type { VehicleAssignment } from '../domain/model/vehicle-assignment.entity';
 import { VehicleAssignmentPolicy } from '../domain/model/vehicle-assignment.policy';
 import { VehicleInspectionSummary } from '../domain/model/vehicle-inspection-summary.entity';
 import { VehicleStatus } from '../domain/model/vehicle-status.enum';
 import { Vehicle } from '../domain/model/vehicle.entity';
+
+const USER_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const LICENSE_NUMBER_MAX_LENGTH = 20;
 
 /**
  * Describes a fleet together with the company that owns it and the condition of its vehicles.
@@ -334,6 +338,40 @@ export class FleetStore {
   };
 
   /**
+   * Registers the driving license of a user account as a driver of the company (US16).
+   *
+   * @param command - User account and license of the driver.
+   * @param done - Called with the registered driver once it has been saved.
+   */
+  registerDriver = (command: RegisterDriverCommand, done?: (driver: Driver) => void): void => {
+    if (this.savingSignal()) return;
+
+    const validLicenseNumber =
+      command.licenseNumber.length > 0 && command.licenseNumber.length <= LICENSE_NUMBER_MAX_LENGTH;
+    const validExpiration = /^\d{4}-\d{2}-\d{2}$/.test(command.licenseExpirationDate);
+    if (!USER_ID_PATTERN.test(command.userId) || !validLicenseNumber || !validExpiration) {
+      this.reject('fleet.errors.invalidDriver');
+      return;
+    }
+    if (this.drivers().some((driver) => driver.userId === command.userId)) {
+      this.reject('fleet.errors.driverAlreadyRegistered');
+      return;
+    }
+
+    this.execute(
+      this.fleetApi.registerDriver(command),
+      (error) => this.driverFailureKey(error),
+      (created) => {
+        this.driversSignal.update((drivers) => [...drivers, created]);
+        this.notifier.success('fleet.notifications.driverRegistered', {
+          license: created.licenseNumber,
+        });
+        done?.(created);
+      },
+    );
+  };
+
+  /**
    * Assigns a vehicle to a driver (US16), provided {@link VehicleAssignmentPolicy} allows it.
    *
    * @param command - Vehicle and driver to assign.
@@ -357,17 +395,9 @@ export class FleetStore {
       return;
     }
 
-    const assignment = VehicleAssignment.start({
-      id: crypto.randomUUID(),
-      vehicleId: command.vehicleId,
-      driverId: command.driverId,
-      assignedFrom: localDate(now),
-      createdAt: now.toISOString(),
-    });
-
     this.execute(
-      this.fleetApi.createVehicleAssignment(assignment),
-      'fleet.errors.saveFailed',
+      this.fleetApi.assignVehicle(command),
+      (error) => this.assignmentFailureKey(error),
       (created) => {
         this.vehicleAssignmentsSignal.update((assignments) => [...assignments, created]);
         this.notifier.success('fleet.notifications.vehicleAssigned');
@@ -397,12 +427,9 @@ export class FleetStore {
       return;
     }
 
-    const ended = existing.copy();
-    ended.close(localDate(now));
-
     this.execute(
-      this.fleetApi.updateVehicleAssignment(ended),
-      'fleet.errors.saveFailed',
+      this.fleetApi.closeVehicleAssignment(existing.id),
+      (error) => this.assignmentFailureKey(error),
       (updated) => {
         this.vehicleAssignmentsSignal.update((assignments) =>
           assignments.map((current) => (current.id === updated.id ? updated : current)),
@@ -411,6 +438,46 @@ export class FleetStore {
       },
     );
   };
+
+  /**
+   * Explains a refused driver registration. A 409 means the account is already a driver and a 422
+   * that the account does not exist.
+   */
+  private driverFailureKey = (error: unknown): string => {
+    switch (this.statusOf(error)) {
+      case 400:
+        return 'fleet.errors.invalidDriver';
+      case 403:
+        return 'fleet.errors.notAllowed';
+      case 409:
+        return 'fleet.errors.driverAlreadyRegistered';
+      case 422:
+        return 'fleet.errors.driverUserNotFound';
+      default:
+        return 'fleet.errors.saveFailed';
+    }
+  };
+
+  /**
+   * Explains a refused assignment or closing. The rules were already checked against the loaded
+   * data, so a 404, 409 or 422 means the data changed in the meantime: it is loaded again.
+   */
+  private assignmentFailureKey = (error: unknown): string => {
+    switch (this.statusOf(error)) {
+      case 403:
+        return 'fleet.errors.notAllowed';
+      case 404:
+      case 409:
+      case 422:
+        this.load();
+        return 'fleet.errors.assignmentOutdated';
+      default:
+        return 'fleet.errors.saveFailed';
+    }
+  };
+
+  private statusOf = (error: unknown): number | null =>
+    error instanceof FleetRequestError ? error.status : null;
 
   private isPlateTaken = (plate: string, exceptVehicleId?: string): boolean =>
     this.vehicles().some((vehicle) => vehicle.id !== exceptVehicleId && vehicle.hasPlate(plate));
@@ -427,7 +494,7 @@ export class FleetStore {
    */
   private execute = <T>(
     request: Observable<T>,
-    failureKey: string,
+    failureKey: string | ((error: unknown) => string),
     onSuccess: (result: T) => void,
   ): void => {
     this.savingSignal.set(true);
@@ -438,8 +505,10 @@ export class FleetStore {
         this.savingSignal.set(false);
         onSuccess(result);
       },
-      error: () => {
-        this.actionErrorSignal.set(failureKey);
+      error: (error: unknown) => {
+        this.actionErrorSignal.set(
+          typeof failureKey === 'function' ? failureKey(error) : failureKey,
+        );
         this.savingSignal.set(false);
       },
     });
